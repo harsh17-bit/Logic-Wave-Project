@@ -1,0 +1,59 @@
+.popular-tools {
+  padding: 48px 20px 56px;
+  background: #fff;
+}
+
+.popular-tools-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.popular-tools-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.popular-tools-subtitle {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.popular-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.popular-tools-card {
+  display: block;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.popular-tools-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 16px rgba(255, 90, 95, 0.12);
+}
+
+.popular-tools-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.popular-tools-card-desc {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.4;
+}

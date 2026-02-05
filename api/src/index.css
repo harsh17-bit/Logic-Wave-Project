@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  /* User Requested Palette */
+  /*--light-yellow: #f8ffe5;*/
+  --emerald: #06d6a0;
+  --pacific-cyan: #1b9aaa;
+  --amber-gold: #ffc43d;
+
+  /* Semantic Mappings */
+  --primary-color: var(--emerald);
+  --secondary-color: var(--pacific-cyan);
+  --accent-color: var(--amber-gold);
+  --background-color: var(--light-yellow);
+
+  /* Helper Variants (optional, if needed by components) */
+  --primary-hover: #05b586;
+  --secondary-hover: #157a8a;
+
+  /* Text Colors */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-light: #ffffff;
+}
+
+/* Ensure root and body render so content is visible */
+#root {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  /* Ensuring font consistency */
+}

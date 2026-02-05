@@ -1,0 +1,68 @@
+.top-cities {
+  padding: 48px 20px 56px;
+  background: #fff;
+}
+
+.top-cities-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.top-cities-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.top-cities-subtitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  text-align: center;
+  letter-spacing: 0.1em;
+  margin-bottom: 32px;
+}
+
+.top-cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.top-cities-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #eee;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.top-cities-card:hover {
+  background: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.15);
+}
+
+.top-cities-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.top-cities-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .top-cities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
