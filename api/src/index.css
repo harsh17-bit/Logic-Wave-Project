@@ -42,11 +42,13 @@ body {
 }/* Import Modern Fonts */
 
 /* Update headings */
-h1, h2, h3, h4, h5, h6 {
+ h2, h3, h4, h5, h6 {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+}
+h1{
+  color:#06d6a0;
 }
 
 /* Better scrollbar */

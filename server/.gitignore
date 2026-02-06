@@ -95,3 +95,4 @@ dist-ssr
 
 .env
 node_modules/
+server/seeder.js

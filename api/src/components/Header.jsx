@@ -79,7 +79,7 @@ const Header = () => {
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--light-yellow)] hover:text-[var(--pacific-cyan)] transition-colors"
                       onClick={() => setIsProfileOpen(false)}
                     >
-                      <FiGrid className="w-4 h-4" />
+                      <FiGrid className="w-2 h-2" />
                       Dashboard
                     </Link>
 

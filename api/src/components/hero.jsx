@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiHome, FiMapPin, FiDollarSign } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import "./Hero.css";
 
 const Hero = () => {
@@ -129,7 +129,6 @@ const Hero = () => {
             {/* Search Button */}
             <button className="search-btn" onClick={handleSearch}>
               <FiSearch className="btn-icon" />
-            
             </button>
           </div>
         </div>

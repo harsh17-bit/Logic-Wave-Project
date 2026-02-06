@@ -142,13 +142,40 @@ const PostProperty = () => {
     const handleImageAdd = () => {
         const urlInput = document.getElementById("image-url-input");
         const url = urlInput.value.trim();
-        if (url) {
-            setFormData({
-                ...formData,
-                images: [...formData.images, { url, caption: "", isPrimary: formData.images.length === 0 }]
-            });
-            urlInput.value = "";
+        
+        if (!url) {
+            setErrors({ ...errors, imageUrl: "Please enter an image URL" });
+            return;
         }
+        
+        // Basic URL validation
+        try {
+            new URL(url);
+        } catch (e) {
+            setErrors({ ...errors, imageUrl: "Please enter a valid URL" });
+            return;
+        }
+        
+        // Check if it's an image URL (basic check)
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+        const lowerUrl = url.toLowerCase();
+        const isImageUrl = imageExtensions.some(ext => lowerUrl.includes(ext)) || 
+                          lowerUrl.includes('unsplash') || 
+                          lowerUrl.includes('pexels') ||
+                          lowerUrl.includes('pixabay') ||
+                          lowerUrl.includes('imgur');
+        
+        if (!isImageUrl && !lowerUrl.startsWith('data:image')) {
+            setErrors({ ...errors, imageUrl: "URL doesn't appear to be an image. Supported: JPG, PNG, GIF, WebP" });
+            return;
+        }
+        
+        setFormData({
+            ...formData,
+            images: [...formData.images, { url, caption: "", isPrimary: formData.images.length === 0 }]
+        });
+        urlInput.value = "";
+        setErrors({ ...errors, imageUrl: "" });
     };
 
     const handleImageRemove = (index) => {
@@ -681,32 +708,71 @@ const PostProperty = () => {
 
                             <div className="section">
                                 <h3>Property Images</h3>
-                                <p className="section-note">Add image URLs (JPG, PNG)</p>
+                                <p className="section-note">Add image URLs (JPG, PNG, WebP) - Max 10 images</p>
                                 <div className="highlights-input">
                                     <input
-                                        type="text"
+                                        type="url"
                                         id="image-url-input"
-                                        placeholder="Paste image URL here..."
+                                        placeholder="https://example.com/image.jpg"
+                                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleImageAdd())}
                                     />
                                     <button
                                         type="button"
                                         onClick={handleImageAdd}
                                         disabled={formData.images.length >= 10}
                                     >
-                                        <FiPlus /> Add
+                                        <FiPlus /> Add Image
                                     </button>
                                 </div>
-                                <div className="highlights-list">
-                                    {formData.images.map((img, index) => (
-                                        <div key={index} className="image-preview-tag" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '6px', fontSize: '0.9rem' }}>
-                                            <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{img.url}</span>
-                                            {img.isPrimary && <span style={{ fontSize: '0.7rem', background: '#f97316', color: 'white', padding: '2px 4px', borderRadius: '4px' }}>Main</span>}
-                                            <button onClick={() => handleImageRemove(index)} style={{ color: '#ef4444', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                                                <FiX />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
+                                {errors.imageUrl && <p style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '4px' }}>{errors.imageUrl}</p>}
+                                
+                                {formData.images.length === 0 ? (
+                                    <div style={{ textAlign: 'center', padding: '40px', background: '#f9fafb', borderRadius: '12px', border: '2px dashed #d1d5db', marginTop: '16px' }}>
+                                        <FiImage style={{ fontSize: '48px', color: '#9ca3af', marginBottom: '12px' }} />
+                                        <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>No images added yet</p>
+                                        <p style={{ color: '#9ca3af', fontSize: '0.8rem' }}>Add at least one image to showcase your property</p>
+                                    </div>
+                                ) : (
+                                    <div className="image-preview-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px', marginTop: '16px' }}>
+                                        {formData.images.map((img, index) => (
+                                            <div key={index} className="image-preview-card" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e5e7eb', background: '#f3f4f6' }}>
+                                                {img.isPrimary && (
+                                                    <div style={{ position: 'absolute', top: '8px', left: '8px', background: '#f97316', color: 'white', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '600', zIndex: 2, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                                                        Main Photo
+                                                    </div>
+                                                )}
+                                                <button 
+                                                    onClick={() => handleImageRemove(index)} 
+                                                    style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2, transition: 'background 0.2s' }}
+                                                    onMouseOver={(e) => e.currentTarget.style.background = '#ef4444'}
+                                                    onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.7)'}
+                                                >
+                                                    <FiX size={16} />
+                                                </button>
+                                                <img 
+                                                    src={img.url} 
+                                                    alt={`Property ${index + 1}`}
+                                                    style={{ width: '100%', height: '150px', objectFit: 'cover', display: 'block' }}
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextSibling.style.display = 'flex';
+                                                    }}
+                                                />
+                                                <div style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '150px', background: '#fee2e2', color: '#991b1b', flexDirection: 'column', gap: '8px' }}>
+                                                    <FiImage size={24} />
+                                                    <span style={{ fontSize: '0.75rem', textAlign: 'center', padding: '0 8px' }}>Failed to load</span>
+                                                </div>
+                                                <div style={{ padding: '8px', background: 'white', borderTop: '1px solid #e5e7eb' }}>
+                                                    <p style={{ fontSize: '0.75rem', color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>Image {index + 1}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                
+                                <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '12px' }}>
+                                    💡 Tip: Use high-quality images from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" style={{ color: '#06d6a0' }}>Unsplash</a> or upload to <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" style={{ color: '#06d6a0' }}>Imgur</a>
+                                </p>
                             </div>
 
                             <div className="section">

@@ -43,11 +43,11 @@
   font-weight: 800;
   margin-bottom: 16px;
   animation: fadeInUp 0.8s ease;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .hero-container h1 span {
   background: linear-gradient(90deg, #06d6a0, #ffc43d);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;

@@ -42,9 +42,18 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
   if (viewMode === "list") {
     return (
       <Link to={`/property/${_id}`} className="property-card list-view">
-        <div className="property-image-wrap">
-          <img src={image} alt={title} className="property-image" />
-          <div className="image-badges">
+      <div className="property-image-wrap">
+        <img 
+          src={image} 
+          alt={title} 
+          className="property-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400";
+          }}
+          loading="lazy"
+        />
+        <div className="image-badges">
             {isFeatured && (
               <span className="badge featured"><FiStar /> Featured</span>
             )}
@@ -94,7 +103,16 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
   return (
     <Link to={`/property/${_id}`} className="property-card">
       <div className="property-image-wrap">
-        <img src={image} alt={title} className="property-image" />
+        <img 
+          src={image} 
+          alt={title} 
+          className="property-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400";
+          }}
+          loading="lazy"
+        />
         <div className="image-badges">
           {isFeatured && (
             <span className="badge featured"><FiStar /> Featured</span>
