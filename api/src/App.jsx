@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/authcontext.jsx'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 // Layout Components
 import Header from './components/Header'
@@ -33,6 +33,7 @@ import PostProperty from "./pages/postproperty.jsx"
 import TermsOfService from "./pages/termsofservice.jsx"
 import PrivacyPolicy from "./pages/privacypolicy.jsx"
 import FAQ from "./pages/faq.jsx"
+import GravityBackground from "./components/GravityBackground";
 
 // Home Page Component with all sections
 const HomePage = () => {
@@ -91,6 +92,7 @@ const DashboardRouter = () => {
 function AppContent() {
   return (
     <div className="app">
+      <GravityBackground />
       <Header />
       <main>
         <AnimatePresence mode="wait">

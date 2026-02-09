@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@layer base {
+  /* Override Tailwind's base - Remove display block from media elements */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: revert !important;
+    vertical-align: middle;
+  }
+}
+
 :root {
    --emerald: #06d6a0;
   --pacific-cyan: #1b9aaa;
@@ -68,6 +76,7 @@ h1{
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
 }
+
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {

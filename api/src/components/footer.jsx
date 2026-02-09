@@ -110,13 +110,13 @@ const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:support@realestatehub.com"
+                  href="mailto:support@urbanstay.com"
                   className="flex items-center gap-3 text-gray-400 hover:text-[var(--emerald)] transition-colors duration-300 text-sm group"
                 >
                   <span className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover:bg-[var(--emerald)]/20 group-hover:border-[var(--emerald)]/30 transition-all duration-300">
                     <FiMail className="w-4 h-4" />
                   </span>
-                  support@realestatehub.com
+                  support@urbanstay.com
                 </a>
               </li>
               <li>
@@ -135,6 +135,13 @@ const Footer = () => {
                   <FiMapPin className="w-4 h-4" />
                 </span>
                 <span className="pt-2">Mumbai, Maharashtra, India</span>
+              </li>
+              <li className="mt-6 pt-4 border-t border-white/10">
+                <p className="text-xs text-gray-500 mb-2">Certified & Licensed</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-400">RERA Approved</span>
+                  <span className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-400">ISO 9001:2015</span>
+                </div>
               </li>
             </ul>
           </div>

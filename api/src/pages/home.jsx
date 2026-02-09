@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import Hero from "../components/hero.jsx";
 import PropertyCard from "../components/propertycard";
+import TrustBadges from "../components/TrustBadges.jsx";
+import StatsCounter from "../components/StatsCounter.jsx";
+import GuaranteeSection from "../components/GuaranteeSection.jsx";
+import BenefitsSection from "../components/BenefitsSection.jsx";
+import CertificationsSection from "../components/CertificationsSection.jsx";
+import TestimonialsSection from "../components/TestimonialsSection.jsx";
+import TopCities from "../components/TopCities.jsx";
 import { fetchProperties } from "../services/propertyservice.js";
 import "./Home.css";
 
@@ -17,6 +24,9 @@ const Home = () => {
     <>
       {/* Hero Section */}
       <Hero />
+
+      {/* Trust Badges - Immediately after hero */}
+      <TrustBadges />
 
       {/* Property Listing Section */}
       <section className="listing">
@@ -35,6 +45,24 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Stats Counter */}
+      <StatsCounter />
+
+      {/* Benefits Section */}
+      <BenefitsSection />
+
+      {/* Certifications & Awards */}
+      <CertificationsSection />
+
+      {/* Our Guarantee */}
+      <GuaranteeSection />
+
+      {/* Testimonials */}
+      <TestimonialsSection />
+
+      {/* Top Cities */}
+      <TopCities />
     </>
   );
 };
