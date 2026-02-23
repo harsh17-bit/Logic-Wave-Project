@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   FiHeart, FiShare2, FiMapPin, FiHome, FiMaximize, FiLayers,
   FiCheck, FiPhone, FiMessageSquare, FiChevronLeft, FiChevronRight,
-  FiStar, FiShield, FiPrinter, FiX,  FiTrendingUp, FiCloud, FiGlobe
+  FiStar, FiShield, FiPrinter, FiX,  FiTrendingUp, FiCloud, FiGlobe, FiExternalLink
 } from "react-icons/fi";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -14,7 +14,6 @@ import { inquiryService, reviewService } from "../services/dataservice";
 import { weatherService } from "../services/weatherservice";
 import { getImageUrl } from "../utils/imageUtils";
 import PropertyCard from "../components/propertycard";
-import BookingConfirmation from "../components/BookingConfirmation";
 import "./PropertyDetails.css";
 
 
@@ -42,15 +41,7 @@ const PropertyDetails = () => {
     phone: "",
     inquiryType: "general",
   });
-  const [showBookingModal, setShowBookingModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
-  const [showEMICalculator, setShowEMICalculator] = useState(false);
-  const [emiData, setEmiData] = useState({
-    loanAmount: "",
-    interestRate: "8.5",
-    tenure: "20",
-  });
-  const [emiResult, setEmiResult] = useState(null);
   const [weather, setWeather] = useState(null);
   
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -176,44 +167,6 @@ const PropertyDetails = () => {
     }
     return `₹${price?.toLocaleString()}`;
   };
-
-  const calculateEMI = () => {
-    const principal = parseFloat(emiData.loanAmount);
-    const rate = parseFloat(emiData.interestRate) / 12 / 100; // Monthly interest rate
-    const time = parseFloat(emiData.tenure) * 12; // Total months
-
-    if (!principal || !rate || !time) {
-      alert("Please fill all fields correctly");
-      return;
-    }
-
-    // EMI = [P x R x (1+R)^N]/[(1+R)^N-1]
-    const emi = (principal * rate * Math.pow(1 + rate, time)) / (Math.pow(1 + rate, time) - 1);
-    const totalAmount = emi * time;
-    const totalInterest = totalAmount - principal;
-
-    setEmiResult({
-      emi: Math.round(emi),
-      totalAmount: Math.round(totalAmount),
-      totalInterest: Math.round(totalInterest),
-      principal: Math.round(principal),
-    });
-  };
-
-  const handleEMIInputChange = (e) => {
-    const { name, value } = e.target;
-    setEmiData({ ...emiData, [name]: value });
-    setEmiResult(null); // Reset result when inputs change
-  };
-
-  const openEMICalculator = () => {
-    // Pre-fill loan amount with 80% of property price
-    const suggestedLoan = Math.round(property.price * 0.8);
-    setEmiData({ ...emiData, loanAmount: suggestedLoan.toString() });
-    setShowEMICalculator(true);
-    setEmiResult(null);
-  };
-
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     
@@ -277,31 +230,6 @@ const PropertyDetails = () => {
       setReviewData({
         ...reviewData,
         ratings: { ...reviewData.ratings, [category]: value },
-      });
-    }
-  };
-
-  const addProCon = (type) => {
-    const item = prompt(`Enter a ${type}:`);
-    if (item && item.trim() !== "") {
-      if (type === "pro") {
-        setReviewData({ ...reviewData, pros: [...reviewData.pros, item.trim()] });
-      } else {
-        setReviewData({ ...reviewData, cons: [...reviewData.cons, item.trim()] });
-      }
-    }
-  };
-
-  const removeProCon = (type, index) => {
-    if (type === "pro") {
-      setReviewData({
-        ...reviewData,
-        pros: reviewData.pros.filter((_, i) => i !== index),
-      });
-    } else {
-      setReviewData({
-        ...reviewData,
-        cons: reviewData.cons.filter((_, i) => i !== index),
       });
     }
   };
@@ -412,11 +340,7 @@ const PropertyDetails = () => {
                   </span>
                 )}
               </div>
-              {property.listingType === "buy" && (
-                <button className="emi-calc-btn" onClick={openEMICalculator}>
-                  <FiTrendingUp /> EMI Calculator
-                </button>
-              )}
+              
             </div>
             <div className="specs-row">
               {property.specifications?.bedrooms && (
@@ -708,59 +632,6 @@ const PropertyDetails = () => {
                           ))}
                         </div>
                       </div>
-
-                      {/* Pros */}
-                      <div className="form-group">
-                        <label>Pros</label>
-                        <div className="pros-cons-list">
-                          {reviewData.pros.map((pro, index) => (
-                            <div key={index} className="list-item">
-                              <span>✓ {pro}</span>
-                              <button
-                                type="button"
-                                onClick={() => removeProCon("pro", index)}
-                                className="remove-btn"
-                              >
-                                <FiX />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                        <button
-                          type="button"
-                          className="btn-outline small"
-                          onClick={() => addProCon("pro")}
-                        >
-                          + Add Pro
-                        </button>
-                      </div>
-
-                      {/* Cons */}
-                      <div className="form-group">
-                        <label>Cons</label>
-                        <div className="pros-cons-list">
-                          {reviewData.cons.map((con, index) => (
-                            <div key={index} className="list-item">
-                              <span>✗ {con}</span>
-                              <button
-                                type="button"
-                                onClick={() => removeProCon("con", index)}
-                                className="remove-btn"
-                              >
-                                <FiX />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                        <button
-                          type="button"
-                          className="btn-outline small"
-                          onClick={() => addProCon("con")}
-                        >
-                          + Add Con
-                        </button>
-                      </div>
-
                       {/* Form Actions */}
                       <div className="form-actions">
                         <button
@@ -894,21 +765,35 @@ const PropertyDetails = () => {
             </div>
 
             <div className="contact-buttons">
-              <button className="btn-primary" onClick={() => setShowInquiryForm(true)}>
-                <FiMessageSquare /> Contact Owner
-              </button>
-              <button className="btn-primary" onClick={() => setShowBookingModal(true)}>
-                <FiCheck /> Book Property
-              </button>
-              {property.owner?.phone && (
-                <a href={`tel:${property.owner.phone}`} className="btn-outline">
-                  <FiPhone /> Call Now
-                </a>
+              {property.status === 'sold' || property.status === 'rented' ? (
+                <div className="sold-notice">
+                  <span className={`status-sold-tag ${property.status}`}>
+                    {property.status === 'sold' ? 'This property has been Sold' : 'This property has been Rented'}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <button className="btn-primary" onClick={() => {
+                    if (!isAuthenticated) {
+                      Navigate("/login");
+                      return;
+                    }
+                    setShowInquiryForm(true);
+                  }}>
+                    <FiMessageSquare /> Contact Owner
+                  </button>
+                  {property.owner?.phone && (
+                    <a href={`tel:${property.owner.phone}`} className="btn-outline">
+                      <FiPhone /> Call Now
+                    </a>
+                  )}
+                </>
               )}
             </div>
           </div>
 
           {/* Inquiry Form Modal */}
+          
           {showInquiryForm && (
             <div className="inquiry-modal">
               <div className="modal-content">
@@ -932,6 +817,9 @@ const PropertyDetails = () => {
                       value={inquiryData.phone}
                       onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
                       placeholder="Your phone number"
+                      pattern="[6-9]{1}[0-9]{9}"
+                      title="Enter valid 10 digit mobile number"
+                      required
                     />
                   </div>
                   <div className="form-group">
@@ -956,151 +844,6 @@ const PropertyDetails = () => {
               </div>
             </div>
           )}
-
-          {/* EMI Calculator Modal */}
-          {showEMICalculator && (
-            <div className="modal-overlay" onClick={() => setShowEMICalculator(false)}>
-              <div className="modal-content emi-calculator-modal" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                  <h3><FiTrendingUp /> EMI Calculator</h3>
-                  <button className="close-btn" onClick={() => setShowEMICalculator(false)}>
-                    <FiX />
-                  </button>
-                </div>
-                
-                <div className="emi-calculator-body">
-                  <div className="emi-inputs">
-                    <div className="form-group">
-                      <label>Loan Amount (₹)</label>
-                      <input
-                        type="number"
-                        name="loanAmount"
-                        value={emiData.loanAmount}
-                        onChange={handleEMIInputChange}
-                        placeholder="Enter loan amount"
-                      />
-                      <small>Property Price: ₹{property.price.toLocaleString()}</small>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Interest Rate (% per annum)</label>
-                      <input
-                        type="number"
-                        name="interestRate"
-                        value={emiData.interestRate}
-                        onChange={handleEMIInputChange}
-                        step="0.1"
-                        placeholder="Enter interest rate"
-                      />
-                      <div className="input-range">
-                        <input
-                          type="range"
-                          name="interestRate"
-                          min="6"
-                          max="15"
-                          step="0.1"
-                          value={emiData.interestRate}
-                          onChange={handleEMIInputChange}
-                        />
-                        <span>{emiData.interestRate}%</span>
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Loan Tenure (Years)</label>
-                      <input
-                        type="number"
-                        name="tenure"
-                        value={emiData.tenure}
-                        onChange={handleEMIInputChange}
-                        placeholder="Enter tenure"
-                      />
-                      <div className="input-range">
-                        <input
-                          type="range"
-                          name="tenure"
-                          min="1"
-                          max="30"
-                          value={emiData.tenure}
-                          onChange={handleEMIInputChange}
-                        />
-                        <span>{emiData.tenure} years</span>
-                      </div>
-                    </div>
-
-                    <button className="btn-primary calculate-btn" onClick={calculateEMI}>
-                      Calculate EMI
-                    </button>
-                  </div>
-
-                  {emiResult && (
-                    <div className="emi-results">
-                      <div className="emi-result-card primary">
-                        <label>Monthly EMI</label>
-                        <h2>₹{emiResult.emi.toLocaleString()}</h2>
-                      </div>
-
-                      <div className="emi-breakdown">
-                        <div className="breakdown-item">
-                          <span>Principal Amount</span>
-                          <strong>₹{emiResult.principal.toLocaleString()}</strong>
-                        </div>
-                        <div className="breakdown-item">
-                          <span>Total Interest</span>
-                          <strong>₹{emiResult.totalInterest.toLocaleString()}</strong>
-                        </div>
-                        <div className="breakdown-item">
-                          <span>Total Amount</span>
-                          <strong>₹{emiResult.totalAmount.toLocaleString()}</strong>
-                        </div>
-                      </div>
-
-                      <div className="emi-chart">
-                        <div className="chart-bar">
-                          <div 
-                            className="principal-bar" 
-                            style={{ width: `${(emiResult.principal / emiResult.totalAmount) * 100}%` }}
-                          >
-                            <span>Principal</span>
-                          </div>
-                          <div 
-                            className="interest-bar" 
-                            style={{ width: `${(emiResult.totalInterest / emiResult.totalAmount) * 100}%` }}
-                          >
-                            <span>Interest</span>
-                          </div>
-                        </div>
-                        <div className="chart-legend">
-                          <div className="legend-item">
-                            <span className="color-box principal"></span>
-                            <span>Principal: {((emiResult.principal / emiResult.totalAmount) * 100).toFixed(1)}%</span>
-                          </div>
-                          <div className="legend-item">
-                            <span className="color-box interest"></span>
-                            <span>Interest: {((emiResult.totalInterest / emiResult.totalAmount) * 100).toFixed(1)}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Booking Modal */}
-          {showBookingModal && property && (
-            <BookingConfirmation 
-              property={property}
-              isOpen={showBookingModal}
-              onClose={() => setShowBookingModal(false)}
-              onSuccess={() => {
-                setShowBookingModal(false);
-                // Optional: show success message
-              }}
-            />
-          )}
-
           {/* Weather Widget */}
           {weather && (
             <div className="weather-card">
@@ -1124,21 +867,6 @@ const PropertyDetails = () => {
             </div>
           )}
 
-          {/* EMI Calculator */}
-          {property.listingType === "buy" && (
-            <div className="emi-card">
-              <h4>EMI Calculator</h4>
-              <div className="emi-estimate">
-                <span className="emi-value">
-                  ₹{Math.round((property.price * 0.08) / 12).toLocaleString()}/month
-                </span>
-                <span className="emi-note">Estimated EMI at 8% for 20 years</span>
-              </div>
-              <button className="btn-outline full" onClick={openEMICalculator}>
-                Calculate Custom EMI
-              </button>
-            </div>
-          )}
         </aside>
       </div>
 

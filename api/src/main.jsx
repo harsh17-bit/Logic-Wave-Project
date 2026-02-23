@@ -24,11 +24,9 @@ class ErrorBoundary extends React.Component {
 }
 
 const root = document.getElementById('root')
-console.log('Root element:', root);
 if (!root) {
   document.body.innerHTML = '<p style="padding:2rem">No #root element found. Check index.html.</p>'
 } else {
-  console.log('Rendering React App...');
   createRoot(root).render(
     <React.StrictMode>
       <ErrorBoundary>

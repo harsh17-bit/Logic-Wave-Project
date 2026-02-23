@@ -263,8 +263,96 @@ const sendPasswordResetOtpEmail = async (data) => {
   }
 };
 
+/**
+ * Sends an email notification to a user when someone replies to their inquiry
+ *
+ * @param {Object} data
+ * @param {string} data.toEmail        - Recipient email
+ * @param {string} data.toName         - Recipient name
+ * @param {string} data.replierName    - Name of the person who replied
+ * @param {string} data.propertyTitle  - Property title
+ * @param {string} data.replyMessage   - The reply message content
+ * @param {string} data.inquiryId      - Inquiry ID for deep-link
+ */
+const sendInquiryReplyNotification = async (data) => {
+  try {
+    const transporter = createTransporter();
+    const dashboardUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/inquiry/${data.inquiryId}`;
+
+    const mailOptions = {
+      from: `"Urban Stay Property" <${process.env.EMAIL_USER}>`,
+      to: data.toEmail,
+      subject: `New reply on your inquiry — ${data.propertyTitle}`,
+      html: `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#f5f7fa;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
+<tr><td align="center">
+<table width="540" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+  <!-- Header -->
+  <tr>
+    <td style="background:#0f3b52;padding:24px 32px;">
+      <h2 style="margin:0;color:#ffffff;font-size:20px;">New Reply on Your Inquiry</h2>
+      <p style="margin:4px 0 0;color:#94c9e0;font-size:13px;">Urban Stay Property</p>
+    </td>
+  </tr>
+  <!-- Body -->
+  <tr>
+    <td style="padding:28px 32px;">
+      <p style="margin:0 0 16px;color:#334155;font-size:15px;">Hi <strong>${data.toName}</strong>,</p>
+      <p style="margin:0 0 20px;color:#475569;font-size:14px;line-height:1.6;">
+        <strong>${data.replierName}</strong> has replied to your inquiry about
+        <strong>${data.propertyTitle}</strong>.
+      </p>
+
+      <!-- Reply bubble -->
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background:#f0f9ff;border-left:4px solid #0f3b52;border-radius:0 8px 8px 0;padding:14px 18px;">
+            <p style="margin:0 0 6px;font-size:12px;color:#64748b;font-weight:bold;text-transform:uppercase;letter-spacing:0.5px;">Their reply</p>
+            <p style="margin:0;color:#1e293b;font-size:14px;line-height:1.65;">${data.replyMessage}</p>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:24px 0 20px;color:#475569;font-size:14px;">Click below to view the full conversation and reply back:</p>
+
+      <a href="${dashboardUrl}"
+         style="display:inline-block;background:#d4a574;color:#ffffff;text-decoration:none;padding:12px 26px;border-radius:7px;font-size:14px;font-weight:bold;">
+        View Conversation
+      </a>
+    </td>
+  </tr>
+  <!-- Footer -->
+  <tr>
+    <td style="background:#f8fafc;padding:16px 32px;border-top:1px solid #e2e8f0;">
+      <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">
+        You're receiving this because you have an active inquiry on Urban Stay.
+        &copy; ${new Date().getFullYear()} Urban Stay Property
+      </p>
+    </td>
+  </tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Inquiry reply notification sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending reply notification email:', error.message);
+    throw error;
+  }
+};
+
 module.exports = {
   sendInquiryNotification,
+  sendInquiryReplyNotification,
   sendWelcomeEmail,
   sendPasswordResetOtpEmail,
 };

@@ -26,6 +26,9 @@ const AdminDashboard = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [showPropertyDeleteConfirm, setShowPropertyDeleteConfirm] = useState(false);
+    const [propertyToDelete, setPropertyToDelete] = useState(null);
+    const [isDeletingProperty, setIsDeletingProperty] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -42,6 +45,7 @@ const AdminDashboard = () => {
                 const propertiesRes = await propertyService.getProperties({
                     limit: 100,
                     sort: "newest",
+                    status: "all",
                 });
                 setProperties(propertiesRes.properties || []);
             }
@@ -117,6 +121,27 @@ const AdminDashboard = () => {
         setShowDeleteConfirm(true);
     };
 
+    const confirmDeleteProperty = (property) => {
+        setPropertyToDelete(property);
+        setShowPropertyDeleteConfirm(true);
+    };
+
+    const handleDeleteProperty = async () => {
+        if (!propertyToDelete) return;
+        setIsDeletingProperty(true);
+        try {
+            await propertyService.deleteProperty(propertyToDelete._id);
+            setProperties(prev => prev.filter(p => p._id !== propertyToDelete._id));
+            setShowPropertyDeleteConfirm(false);
+            setPropertyToDelete(null);
+        } catch (error) {
+            console.error("Error deleting property:", error);
+            alert(error.response?.data?.message || "Error deleting property");
+        } finally {
+            setIsDeletingProperty(false);
+        }
+    };
+
     const filteredUsers = users.filter(u => {
         const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             u.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -171,12 +196,12 @@ const AdminDashboard = () => {
                                 <>
                                     <div className="stats-grid admin-stats">
                                         <div className="stat-card gradient-black">
-                                            <div className="stat-icon" style={{ backgroundColor: "#d1fae5", color: "#059669"}}>
+                                            <div className="stat-icon">
                                             <svg fill="#000" width="800" height="800" viewBox="144 144 512 512" xmlns="http://www.w3.org/2000/svg"><g><path d="m4e2 565.31c3.3008.007812 6.4688-1.293 8.8164-3.6133l60.512-60.07v-.003906c9.4648-9.0391 15.422-21.141 16.816-34.152 1.3984-13.016-1.8594-26.102-9.1875-36.945-8.5547-11.895-21.535-19.84-36.02-22.043-14.48-2.1992-29.238 1.5273-40.938 10.344-11.695-8.8164-26.453-12.547-40.934-10.348-14.477 2.1953-27.461 10.133-36.016 22.023-7.3359 10.844-10.594 23.934-9.1953 36.949 1.3945 13.016 7.3555 25.117 16.82 34.156l60.504 60.07.003906.003906c2.3398 2.332 5.5117 3.6367 8.8164 3.6289zm-64.207-125.57c6.5898-9.2695 16.957-15.129 28.293-15.996 1.0547-.085938 2.1016-.13281 3.1484-.13281v-.003907c10.207-.019531 20.008 4.0039 27.254 11.195l5.5117 5.5117 5.5117-5.5117h-.003907c8.0547-7.9648 19.191-12.004 30.477-11.051 11.285.94922 21.59 6.7969 28.195 15.996 5.1406 7.793 7.3594 17.156 6.2656 26.43-1.0977 9.2734-5.4336 17.863-12.25 24.25l-58.195 57.82-58.254-57.82c-6.8164-6.3867-11.152-14.98-12.242-24.258-1.0898-9.2773 1.1406-18.641 6.2891-26.43z"/><path d="m633.8 387.73-228.29-221.68c-3.0508-2.9609-7.9023-2.9609-10.957.0l-228.29 221.68c-1.6445 1.5977-2.5117 3.8359-2.375 6.125.14062 2.2891 1.2734 4.4062 3.1016 5.793l39.656 30.262c3.0234 2.3008 7.2578 2.1133 10.07-.44141l183.29-166.52 183.28 166.49c2.8125 2.5547 7.0469 2.7422 10.07.4375l39.699-30.23v.003906c1.8242-1.3867 2.957-3.5039 3.0938-5.793.13672-2.293-.73047-4.5273-2.3789-6.125zm-44.766 25.648-183.74-166.89c-3-2.7227-7.5781-2.7227-10.582.0l-183.74 166.89-27.215-20.723 216.25-209.98 216.24 209.98z"/><path d="m573.18 447.23c-4.3477.0-7.8711 3.5234-7.8711 7.8711v165.31h-330.62v-165.31c0-4.3477-3.5273-7.8711-7.875-7.8711s-7.8711 3.5234-7.8711 7.8711v173.19c0 2.0859.82812 4.0898 2.3047 5.5664 1.4766 1.4727 3.4805 2.3047 5.5664 2.3047h346.37c2.0859.0 4.0898-.83203 5.5664-2.3047 1.4766-1.4766 2.3047-3.4805 2.3047-5.5664v-173.19c0-2.0859-.82813-4.0898-2.3047-5.5664-1.4766-1.4766-3.4805-2.3047-5.5664-2.3047z"/><path d="m242.56 289.79c2.0859.0 4.0898-.82812 5.5664-2.3047s2.3047-3.4766 2.3047-5.5664v-78.719h39.359v15.742c0 4.3477 3.5273 7.8711 7.875 7.8711s7.8711-3.5234 7.8711-7.8711v-23.617c0-2.0859-.83203-4.0898-2.3047-5.5664-1.4766-1.4727-3.4805-2.3047-5.5664-2.3047h-55.105c-4.3477.0-7.8711 3.5234-7.8711 7.8711v86.594c0 2.0898.82812 4.0898 2.3047 5.5664 1.4766 1.4766 3.4766 2.3047 5.5664 2.3047z"/></g></svg>
                                             </div>
                                             <div className="stat-info">
                                                 <span className="stat-value">{stats.totalProperties}</span>
-                                                <span className="stat-label">Total Properties</span>
+                                                <span className="stat-label" src>Total Properties</span>
                                             </div>
                                         </div>
                                         <div className="stat-card gradient-black">
@@ -302,7 +327,6 @@ const AdminDashboard = () => {
                                         <tr>
                                             <th>User</th>
                                             <th>Contact</th>
-                                            <th>Address</th>
                                             <th>Role</th>
                                             <th>Professional Details</th>
                                             <th>Joined</th>
@@ -336,20 +360,6 @@ const AdminDashboard = () => {
                                                             </div>
                                                         )}
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    {u.address?.city || u.address?.state ? (
-                                                        <div className="address-info">
-                                                            <FiMapPin size={14} />
-                                                            <span>
-                                                                {u.address?.city}
-                                                                {u.address?.city && u.address?.state ? ", " : ""}
-                                                                {u.address?.state}
-                                                            </span>
-                                                        </div>
-                                                    ) : (
-                                                        <span className="text-muted">-</span>
-                                                    )}
                                                 </td>
                                                 <td>
                                                     <select
@@ -468,15 +478,18 @@ const AdminDashboard = () => {
                                                     <td>
                                                         <div className="action-buttons">
                                                             {!property.isVerified && (
-                                                                <button className="btn-icon success" onClick={() => handleVerifyProperty(property._id)}>
+                                                                <button className="btn-icon success" title="Verify" onClick={() => handleVerifyProperty(property._id)}>
                                                                     <FiShield />
                                                                 </button>
                                                             )}
                                                             {!property.isFeatured && (
-                                                                <button className="btn-icon star" onClick={() => handleFeatureProperty(property._id)}>
+                                                                <button className="btn-icon star" title="Feature" onClick={() => handleFeatureProperty(property._id)}>
                                                                     <FiAward />
                                                                 </button>
                                                             )}
+                                                            <button className="btn-icon danger" title="Delete" onClick={() => confirmDeleteProperty(property)}>
+                                                                <FiTrash2 />
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -564,33 +577,21 @@ const AdminDashboard = () => {
                                 </button>
                             </div>
 
-                            <div className="modal-body">
-                                {/* Personal Information */}
-                                <div className="detail-section">
-                                    <h3>Personal Information</h3>
-                                    <div className="detail-grid">
-                                        <div className="detail-item">
-                                            <label>
-                                                <FiUser /> Full Name
-                                            </label>
-                                            <p>{selectedUser.name}</p>
-                                        </div>
-                                        <div className="detail-item">
-                                            <label>
-                                                <FiCalendar /> Date of Birth
-                                            </label>
-                                            <p>
-                                                {selectedUser.dateOfBirth
-                                                    ? new Date(selectedUser.dateOfBirth).toLocaleDateString()
-                                                    : "Not provided"}
-                                            </p>
-                                        </div>
-                                        <div className="detail-item">
-                                            <label>Gender</label>
-                                            <p>{selectedUser.gender ? selectedUser.gender.charAt(0).toUpperCase() + selectedUser.gender.slice(1) : "Not provided"}</p>
+                                <div className="modal-body">
+                                    {/* Personal Information */}
+                                    <div className="detail-section">
+                                        <h3>Personal Information</h3>
+                                        <div className="detail-grid">
+                                            <div className="detail-item">
+                                                <label>
+                                                    <FiUser /> Full Name
+                                                </label>
+                                                <p>{selectedUser.name}</p>
+                                            </div>
+                                            
+                                            
                                         </div>
                                     </div>
-                                </div>
 
                                 {/* Contact Information */}
                                 <div className="detail-section">
@@ -611,35 +612,7 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* Address Information */}
-                                {(selectedUser.address?.street ||
-                                    selectedUser.address?.city ||
-                                    selectedUser.address?.state ||
-                                    selectedUser.address?.zipCode) && (
-                                    <div className="detail-section">
-                                        <h3>Address</h3>
-                                        <div className="detail-grid">
-                                            <div className="detail-item">
-                                                <label>
-                                                    <FiMapPin /> Street
-                                                </label>
-                                                <p>{selectedUser.address?.street || "-"}</p>
-                                            </div>
-                                            <div className="detail-item">
-                                                <label>City</label>
-                                                <p>{selectedUser.address?.city || "-"}</p>
-                                            </div>
-                                            <div className="detail-item">
-                                                <label>State</label>
-                                                <p>{selectedUser.address?.state || "-"}</p>
-                                            </div>
-                                            <div className="detail-item">
-                                                <label>Zip Code</label>
-                                                <p>{selectedUser.address?.zipCode || "-"}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                
 
                                 {/* Professional Information */}
                                 {selectedUser.role === "seller" && (
@@ -707,10 +680,53 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
-                {/* Delete Confirmation Modal */}
+                {/* Property Delete Confirmation Modal */}
+                {showPropertyDeleteConfirm && propertyToDelete && (
+                    <div className="modal-overlay" onClick={() => !isDeletingProperty && setShowPropertyDeleteConfirm(false)}>
+                        <div className="modal-content delete-modal" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header delete-header">
+                                <FiTrash2 className="delete-icon" />
+                                <h3>Delete Property</h3>
+                            </div>
+                            <div className="modal-body">
+                                <p className="warning-text">
+                                    Are you sure you want to delete this property? This action cannot be undone and will also remove all associated reviews and inquiries.
+                                </p>
+                                <div className="user-info-box">
+                                    <div className="user-avatar-small"><FiHome /></div>
+                                    <div>
+                                        <strong>{propertyToDelete.title}</strong>
+                                        <p>{propertyToDelete.location?.city}{propertyToDelete.location?.state ? `, ${propertyToDelete.location.state}` : ""}</p>
+                                        <span className={`status-badge ${propertyToDelete.status || "pending"}`}>
+                                            {propertyToDelete.status || "pending"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    className="btn-secondary"
+                                    onClick={() => setShowPropertyDeleteConfirm(false)}
+                                    disabled={isDeletingProperty}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="btn-danger"
+                                    onClick={handleDeleteProperty}
+                                    disabled={isDeletingProperty}
+                                >
+                                    {isDeletingProperty ? "Deleting..." : "Delete Property"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* User Delete Confirmation Modal */}
                 {showDeleteConfirm && userToDelete && (
                     <div className="modal-overlay" onClick={() => !isDeleting && setShowDeleteConfirm(false)}>
-                        <div className="modal delete-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content delete-modal" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-header delete-header">
                                 <FiTrash2 className="delete-icon" />
                                 <h3>Delete User</h3>

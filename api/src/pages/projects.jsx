@@ -4,9 +4,9 @@ import { projectService } from "../services/projectservice";
 import "./Projects.css";
 
 const Projects = () => {
-  const [ setProjects] = useState([]);
-  const [setLoading] = useState(true);
-  const [ setError] = useState("");
+  const [, setProjects] = useState([]);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState("");
   const [filters] = useState({
     city: "",
     status: "",

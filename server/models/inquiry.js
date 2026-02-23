@@ -88,9 +88,14 @@ const inquirySchema = new mongoose.Schema(
         isRead: {
             type: Boolean,
             default: false,
-            // Indicates if receiver has read the inquiry
+            // Indicates if receiver (seller) has read the initial inquiry
         },
         readAt: Date,
+        replyRead: {
+            type: Boolean,
+            default: false,
+            // Indicates if sender (buyer) has seen the seller's reply
+        },
     },
     {
         timestamps: true,

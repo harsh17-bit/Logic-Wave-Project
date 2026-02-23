@@ -9,6 +9,38 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.property-card--unavailable {
+  opacity: 0.82;
+  pointer-events: auto;
+}
+
+.property-card--unavailable:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Sold / Rented overlay on image */
+.sold-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.sold-overlay span {
+  padding: 0.5rem 1.5rem;
+  border: 3px solid white;
+  border-radius: 6px;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
 .property-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);

@@ -43,9 +43,16 @@ const resetPasswordSchema = z.object({
  */
 
 const User = require("../models/user");
+const Property = require("../models/property");
+const Inquiry = require("../models/inquiry");
+const Review = require("../models/review");
+const Alert = require("../models/alert");
+const Project = require("../models/project");
 const jwt = require("jsonwebtoken");
 const { sendWelcomeEmail, sendPasswordResetOtpEmail } = require("../utils/email");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Generates a JWT token for authenticated users
@@ -194,9 +201,8 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Track last login time for analytics
-        user.lastLogin = new Date();
-        await user.save();
+        // Track last login time for analytics (bypass validators to avoid phone/field validation errors)
+        await User.findByIdAndUpdate(user._id, { lastLogin: new Date() });
 
         sendTokenResponse(user, 200, res);
     } catch (error) {
@@ -599,13 +605,14 @@ exports.updateUserRole = async (req, res) => {
     }
 };
 
-// @desc    Delete user (Admin)
+// @desc    Delete user + all associated data (Admin)
 // @route   DELETE /api/auth/users/:id
 // @access  Private/Admin
 exports.deleteUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const userId = req.params.id;
 
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -613,15 +620,60 @@ exports.deleteUser = async (req, res) => {
             });
         }
 
+        // 1. Find all properties owned by this user
+        const userProperties = await Property.find({ owner: userId }).select("_id images");
+        const propertyIds = userProperties.map((p) => p._id);
+
+        // 2. Delete uploaded image files for those properties
+        for (const property of userProperties) {
+            if (Array.isArray(property.images)) {
+                for (const img of property.images) {
+                    if (img.url && img.url.startsWith("/uploads/")) {
+                        const filePath = path.join(__dirname, "../", img.url);
+                        fs.unlink(filePath, () => {}); // silent — file may already be gone
+                    }
+                }
+            }
+        }
+
+        // 3. Delete reviews ON the user's properties
+        if (propertyIds.length > 0) {
+            await Review.deleteMany({ property: { $in: propertyIds } });
+            await Inquiry.deleteMany({ property: { $in: propertyIds } });
+        }
+
+        // 4. Delete the user's own properties
+        await Property.deleteMany({ owner: userId });
+
+        // 5. Delete projects created by the user
+        await Project.deleteMany({ developer: userId });
+
+        // 6. Delete reviews written by the user
+        await Review.deleteMany({ user: userId });
+
+        // 7. Delete inquiries sent or received by the user
+        await Inquiry.deleteMany({ $or: [{ sender: userId }, { receiver: userId }] });
+
+        // 8. Delete price/search alerts set by the user
+        await Alert.deleteMany({ user: userId });
+
+        // 9. Finally delete the user account
+        await User.findByIdAndDelete(userId);
+
         res.status(200).json({
             success: true,
-            message: "User deleted successfully",
+            message: "User and all associated data deleted successfully",
+            deleted: {
+                properties: propertyIds.length,
+                projects: await Project.countDocuments({ developer: userId }),
+            },
         });
     } catch (error) {
         console.error("Delete user error:", error);
         res.status(500).json({
             success: false,
             message: "Error deleting user",
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };

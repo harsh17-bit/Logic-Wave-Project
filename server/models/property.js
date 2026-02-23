@@ -1,24 +1,8 @@
 /**
- * Property Model
- * Defines the schema for property listings on UrbanStay.com
- * Handles properties for sale, rent, and PG accommodation
- * 
  * @module models/Property
  */
 
 const mongoose = require("mongoose");
-
-/**
- * Property Schema
- * Contains comprehensive property information including:
- * - Basic details (title, description, price)
- * - Location information with coordinates
- * - Property specifications (size, bedrooms, etc.)
- * - Amenities and features
- * - Media (images, videos)
- * - Ownership and verification status
- * - Analytics (views, inquiries)
- */
 const propertySchema = new mongoose.Schema(
   {
     // Basic Information
@@ -55,7 +39,7 @@ const propertySchema = new mongoose.Schema(
     // Property Classification
     propertyType: {
       type: String,
-      enum: ["apartment", "house", "villa", "plot", "commercial", "office", "shop", "warehouse", "farmhouse"],
+      enum: ["apartment", "house", "pg", "plot", "office", "shop"],
       required: [true, "Property type is required"],
     },
     listingType: {

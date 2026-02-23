@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const companyLinks = [
-    { label: "About Us", href: "#about" },
+    { label: "About Us", href: "/about-us" },
     { label: "Contact", href: "#contact" },
     { label: "Careers", href: "#careers" },
     { label: "Blog", href: "#blog" },
@@ -71,13 +71,23 @@ const Footer = () => {
             <ul className="space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-[var(--color-accent)] transition-colors duration-300 text-sm flex items-center gap-2 group"
-                  >
-                    <span className="w-0 h-0.5 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-2 rounded-full"></span>
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      to={link.href}
+                      className="text-gray-400 hover:text-[var(--color-accent)] transition-colors duration-300 text-sm flex items-center gap-2 group"
+                    >
+                      <span className="w-0 h-0.5 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-2 rounded-full"></span>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-gray-400 hover:text-[var(--color-accent)] transition-colors duration-300 text-sm flex items-center gap-2 group"
+                    >
+                      <span className="w-0 h-0.5 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-2 rounded-full"></span>
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

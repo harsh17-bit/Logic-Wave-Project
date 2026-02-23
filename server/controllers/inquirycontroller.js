@@ -9,7 +9,7 @@
 const Inquiry = require("../models/inquiry");
 const Property = require("../models/property");
 const User = require("../models/user");
-const { sendInquiryNotification } = require('../utils/email');
+const { sendInquiryNotification, sendInquiryReplyNotification } = require('../utils/email');
 
 /**
  * Create a new property inquiry
@@ -41,11 +41,12 @@ exports.createInquiry = async (req, res) => {
             });
         }
 
-        // Prevent duplicate pending inquiries to avoid spam
+        // Prevent duplicate PENDING inquiries to avoid spam
+        // (allow re-inquiry if previous was responded/cancelled/completed)
         const existingInquiry = await Inquiry.findOne({
             property: propertyId,
             sender: req.user.id,
-            status: "pending",
+            status: { $in: ["pending"] },
         });
 
         if (existingInquiry) {
@@ -237,6 +238,12 @@ exports.getInquiry = async (req, res) => {
             await inquiry.save();
         }
 
+        // Mark reply as read if sender (buyer) is viewing and there are responses
+        if (inquiry.sender._id.toString() === req.user.id && !inquiry.replyRead && inquiry.responses.length > 0) {
+            inquiry.replyRead = true;
+            await inquiry.save();
+        }
+
         res.status(200).json({
             success: true,
             inquiry,
@@ -287,16 +294,37 @@ exports.respondToInquiry = async (req, res) => {
             inquiry.status = "responded";
         }
 
+        // Reset replyRead so buyer sees the "New Reply" chip again
+        if (inquiry.receiver.toString() === req.user.id) {
+            inquiry.replyRead = false;
+        }
+
         await inquiry.save();
 
+        // Populate for response and for email details
+        await inquiry.populate([
+            { path: "sender",   select: "name email" },
+            { path: "receiver", select: "name email" },
+            { path: "property", select: "title" },
+            { path: "responses.responder", select: "name avatar" },
+        ]);
+
+        // Notify the other party via email (non-blocking)
         try {
-            // Attempt population safely
-            await inquiry.populate({
-                path: "responses.responder",
-                select: "name avatar"
+            const isSenderReplying = inquiry.sender._id.toString() === req.user.id;
+            const notifyUser    = isSenderReplying ? inquiry.receiver : inquiry.sender;
+            const replierName   = req.user.name || (isSenderReplying ? inquiry.sender.name : inquiry.receiver.name);
+
+            await sendInquiryReplyNotification({
+                toEmail:       notifyUser.email,
+                toName:        notifyUser.name,
+                replierName,
+                propertyTitle: inquiry.property?.title || "the property",
+                replyMessage:  message,
+                inquiryId:     inquiry._id.toString(),
             });
-        } catch (popError) {
-            console.warn("Populate failed, returning unpopulated inquiry:", popError.message);
+        } catch (emailErr) {
+            console.error("Reply notification email failed (non-fatal):", emailErr.message);
         }
 
         res.status(200).json({

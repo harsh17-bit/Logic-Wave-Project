@@ -13,9 +13,7 @@ import Hero from './components/hero.jsx'
 import ExploreOptions from './components/ExploreOptions'
 import TopCities from './components/TopCities'
 import FeaturedProjects from './components/FeaturedProjects'
-import CommercialSection from './components/CommercialSection'
 import PopularTools from './components/PopularTools'
-import BenefitsSection from './components/BenefitsSection'
 import TestimonialsSection from './components/TestimonialsSection'
 
 
@@ -34,6 +32,9 @@ import TermsOfService from "./pages/termsofservice.jsx"
 import PrivacyPolicy from "./pages/privacypolicy.jsx"
 import FAQ from "./pages/faq.jsx"
 import Projects from "./pages/projects.jsx"
+import InquiryDetails from "./pages/InquiryDetails.jsx"
+import AboutUs from "./pages/AboutUs.jsx"
+import EMICalculator from "./pages/EMICalculator.jsx"
 
 
 // Home Page Component with all sections
@@ -43,10 +44,9 @@ const HomePage = () => {
       <Hero />
       <ExploreOptions />
       <TopCities />
-      <FeaturedProjects />
-      <CommercialSection />
       <PopularTools />
-      <BenefitsSection />
+      <FeaturedProjects />
+      
       <TestimonialsSection />
     </>
   )
@@ -129,8 +129,18 @@ function AppContent() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/emi-calculator" element={<EMICalculator />} />
 
           {/* Protected Routes */}
+          <Route
+            path="/inquiry/:id"
+            element={
+              <ProtectedRoute>
+                <InquiryDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -195,7 +205,6 @@ function AppContent() {
 }
 
 function App() {
-  console.log('App component rendering');
   return (
     <BrowserRouter>
       <AuthProvider>  

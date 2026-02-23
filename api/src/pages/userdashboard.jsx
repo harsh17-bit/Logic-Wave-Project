@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
     FiUser, FiHeart, FiMessageSquare, FiBell, FiSettings, FiEdit2,
@@ -14,7 +14,8 @@ import "./Dashboard.css";
 const UserDashboard = () => {
     const { user, updateProfile } = useAuth();
     const [activeTab, setActiveTab] = useState("overview");
-    const [favorites, setFavorites] = useState([]);
+    // Derive favorites directly from user object — updates instantly when toggleFavorite runs
+    const favorites = user?.favorites || [];
     const [inquiries, setInquiries] = useState([]);
     const [alerts, setAlerts] = useState([]);
     const [editMode, setEditMode] = useState(false);
@@ -34,15 +35,15 @@ const UserDashboard = () => {
             ]);
             setInquiries(inquiriesRes.inquiries || []);
             setAlerts(alertsRes.alerts || []);
-            setFavorites(user?.favorites || []);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
 
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchData();
+    }, []);
 
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
@@ -61,11 +62,15 @@ const UserDashboard = () => {
     ];
 
     const tabs = [
-        { id: "overview", label: "Overview", icon: FiHome },
-        { id: "favorites", label: "Favorites", icon: FiHeart },
-        { id: "inquiries", label: "Inquiries", icon: FiMessageSquare },
-        { id: "alerts", label: "Alerts", icon: FiBell },
-        { id: "profile", label: "Profile", icon: FiUser },
+        { id: "overview",   label: "Overview",   icon: FiHome },
+        { id: "favorites",  label: "Favorites",  icon: FiHeart },
+        {
+            id: "inquiries",
+            label: "Inquiries",
+            icon: FiMessageSquare,
+            badge: inquiries.filter(i => i.status === "responded").length || null,
+        },
+        { id: "profile",    label: "Profile",    icon: FiUser },
     ];
 
     return (
@@ -95,6 +100,9 @@ const UserDashboard = () => {
                             >
                                 <tab.icon />
                                 <span>{tab.label}</span>
+                                {tab.badge ? (
+                                    <span className="nav-badge">{tab.badge}</span>
+                                ) : null}
                             </button>
                         ))}
                     </nav>
@@ -110,19 +118,7 @@ const UserDashboard = () => {
                             <h1>Welcome back, {user?.name?.split(" ")[0]}!</h1>
                             <p className="subtitle">Here's what's happening with your property search</p>
 
-                            <div className="stats-grid">
-                                {stats.map((stat, index) => (
-                                    <div key={index} className="stat-card">
-                                        <div className="stat-icon" style={{ backgroundColor: `${stat.color}20`, color: stat.color }}>
-                                            <stat.icon />
-                                        </div>
-                                        <div className="stat-info">
-                                            <span className="stat-value">{stat.value}</span>
-                                            <span className="stat-label">{stat.label}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            
 
                             <div className="dashboard-section">
                                 <div className="section-header">
@@ -142,6 +138,9 @@ const UserDashboard = () => {
                                                 </div>
                                                 <div className="inquiry-meta">
                                                     <span className={`status-badge ${inquiry.status}`}>{inquiry.status}</span>
+                                                    {inquiry.status === "responded" && (
+                                                        <span className="new-reply-chip">New Reply</span>
+                                                    )}
                                                     <span className="inquiry-date">
                                                         <FiCalendar />
                                                         {new Date(inquiry.createdAt).toLocaleDateString()}
@@ -204,6 +203,9 @@ const UserDashboard = () => {
                                             </div>
                                             <div className="inquiry-details">
                                                 <span className={`status-badge ${inquiry.status}`}>{inquiry.status}</span>
+                                                {inquiry.status === "responded" && !inquiry.replyRead && (
+                                                    <span className="new-reply-chip">New Reply</span>
+                                                )}
                                                 <div className="inquiry-responses">
                                                     {inquiry.responses?.length > 0 && (
                                                         <span>{inquiry.responses.length} response(s)</span>
@@ -229,57 +231,7 @@ const UserDashboard = () => {
                         </div>
                     )}
 
-                    {/* Alerts Tab */}
-                    {activeTab === "alerts" && (
-                        <div className="dashboard-content">
-                            <h1>Property Alerts</h1>
-                            <p className="subtitle">Get notified when new properties match your criteria</p>
-
-                            <button className="btn-primary add-alert-btn">
-                                <FiBell /> Create New Alert
-                            </button>
-
-                            {alerts.length > 0 ? (
-                                <div className="alerts-list">
-                                    {alerts.map((alert) => (
-                                        <div key={alert._id} className={`alert-card ${!alert.isActive ? "inactive" : ""}`}>
-                                            <div className="alert-info">
-                                                <h4>{alert.name}</h4>
-                                                <div className="alert-criteria">
-                                                    {alert.criteria?.cities?.length > 0 && (
-                                                        <span><FiMapPin /> {alert.criteria.cities.join(", ")}</span>
-                                                    )}
-                                                    {alert.criteria?.listingType && (
-                                                        <span>For {alert.criteria.listingType}</span>
-                                                    )}
-                                                    {alert.criteria?.propertyTypes?.length > 0 && (
-                                                        <span>{alert.criteria.propertyTypes.join(", ")}</span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="alert-actions">
-                                                <span className={`frequency-badge ${alert.frequency}`}>
-                                                    {alert.frequency}
-                                                </span>
-                                                <button className="btn-icon" title="Edit">
-                                                    <FiEdit2 />
-                                                </button>
-                                                <button className="btn-icon delete" title="Delete">
-                                                    <FiTrash2 />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="empty-state">
-                                    <FiBell />
-                                    <p>Set up alerts to never miss your dream property</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
+                    
                     {/* Profile Tab */}
                     {activeTab === "profile" && (
                         <div className="dashboard-content">

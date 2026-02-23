@@ -12,7 +12,6 @@ const inquiryRoutes = require("./routes/inquiryroutes");
 const reviewRoutes = require("./routes/reviewroutes");
 const alertRoutes = require("./routes/alertroutes");
 const projectRoutes = require("./routes/projectroutes");
-const bookingRoutes = require("./routes/bookingroutes");
 
 const app = express();
 
@@ -20,7 +19,7 @@ const app = express();
 connectDB();
 
 // Middleware
-const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:5173")
+const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:5173,http://localhost:5174")
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -42,7 +41,6 @@ app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/alerts", alertRoutes);
 app.use("/api/projects", projectRoutes);
-app.use("/api/bookings", bookingRoutes);
 
 // Health check
 app.get("/", (req, res) => {

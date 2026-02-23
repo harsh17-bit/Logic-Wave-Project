@@ -10,7 +10,18 @@ exports.getAllProperties = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // Build filter object
-        const filter = { status: "available" };
+        const filter = {};
+
+        // Status filter
+        // - 'all'        → admin view, no filter
+        // - explicit val → use it (e.g. 'available', 'sold')
+        // - default      → show available + sold + rented so buyers see sold cards too
+        if (req.query.status && req.query.status !== 'all') {
+            filter.status = req.query.status;
+        } else if (!req.query.status) {
+            filter.status = { $in: ['available', 'sold', 'rented'] };
+        }
+        // if status=all, no status filter applied (used by admin)
 
         // Listing type filter
         if (req.query.listingType) {
@@ -256,7 +267,7 @@ exports.createProperty = async (req, res) => {
 
         // Use placeholder if no images
         if (!images || images.length === 0) {
-            images = [{ url: "https://via.placeholder.com/800x600", isPrimary: true }];
+            images = [{ url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23e5e7eb' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='%239ca3af' text-anchor='middle' dominant-baseline='middle'%3ENo Image%3C/text%3E%3C/svg%3E", isPrimary: true }];
         }
 
         const propertyData = {

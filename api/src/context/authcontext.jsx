@@ -11,8 +11,8 @@ export const AuthProvider = ({ children }) => {
     // Check for existing session on mount
     useEffect(() => {
         const initAuth = async () => {
-            const token = sessionStorage.getItem("token");
-            const savedUser = sessionStorage.getItem("user");
+            const token = localStorage.getItem("token");
+            const savedUser = localStorage.getItem("user");
 
             if (token && savedUser) {
                 try {
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
                     setUser(response.user);
                 } catch {
                     // Token invalid - clear storage
-                    sessionStorage.removeItem("token");
-                    sessionStorage.removeItem("user");
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
                 }
             }
             setLoading(false);
@@ -46,8 +46,8 @@ export const AuthProvider = ({ children }) => {
         try {
             setError(null);
             const response = await authService.login(credentials);
-            sessionStorage.setItem("token", response.token);
-            sessionStorage.setItem("user", JSON.stringify(response.user));
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("user", JSON.stringify(response.user));
             setUser(response.user);
             return response;
         } catch (err) {
@@ -58,8 +58,8 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         authService.logout();
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setUser(null);
     };
 

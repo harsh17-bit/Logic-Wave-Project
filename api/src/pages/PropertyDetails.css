@@ -1866,3 +1866,30 @@
         border-color: #000 !important;
     }
 }
+
+/* Sold / Rented notice on property details */
+.sold-notice {
+    margin-top: 0.5rem;
+}
+
+.status-sold-tag {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+}
+
+.status-sold-tag.sold {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1.5px solid #fca5a5;
+}
+
+.status-sold-tag.rented {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1.5px solid #93c5fd;
+}

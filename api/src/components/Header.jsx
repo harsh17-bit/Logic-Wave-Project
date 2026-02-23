@@ -14,9 +14,9 @@ const Header = () => {
     { label: "Buy", href: "/properties?listingType=buy" },
     { label: "Rent", href: "/properties?listingType=rent" },
     { label: "Sell", href: "/post-property" }, 
-    { label: "Projects", href: "/projects" },
+    { label: "About Us", href: "/about-us" },
     { label: "FAQs", href: "/faq" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Privacy Policy",href:"/privacy-policy" },
   ];
 
   const handleLogout = () => {

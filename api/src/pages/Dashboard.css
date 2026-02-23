@@ -111,6 +111,29 @@
     height: 1.25rem;
 }
 
+/* Notification badge on sidebar tab */
+.nav-badge {
+    margin-left: auto;
+    background: #ef4444;
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    line-height: 1;
+    animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes badgePop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
 .sidebar-footer {
     margin-top: 1.5rem;
     padding-top: 1rem;
@@ -307,6 +330,26 @@
     text-transform: capitalize;
 }
 
+.status-badge.available {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.sold {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.rented {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge.draft {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
 .status-badge.pending {
     background: #fef3c7;
     color: #d97706;
@@ -330,6 +373,38 @@
 .status-badge.cancelled {
     background: #fee2e2;
     color: #dc2626;
+}
+
+/* "New Reply" highlight chip on inquiry cards */
+.new-reply-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: #fef3c7;
+    color: #b45309;
+    border: 1.5px solid #fde68a;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.new-reply-chip::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #f59e0b;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.7); }
 }
 
 .inquiry-date {
@@ -544,7 +619,7 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: gray;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -650,3 +725,25 @@
         grid-template-columns: 1fr;
     }
 }
+/* Status select dropdown for seller dashboard */
+.status-select {
+    border: none;
+    border-radius: 20px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    text-transform: capitalize;
+    transition: opacity 0.2s;
+}
+
+.status-select:hover {
+    opacity: 0.85;
+}
+
+.status-select.available { background: #d1fae5; color: #065f46; }
+.status-select.sold      { background: #fee2e2; color: #991b1b; }
+.status-select.rented    { background: #dbeafe; color: #1e40af; }
+.status-select.pending   { background: #fef3c7; color: #d97706; }
+.status-select.draft     { background: #f1f5f9; color: #64748b; }

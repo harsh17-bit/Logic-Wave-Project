@@ -368,163 +368,202 @@ const PostProperty = () => {
     };
 
     const steps = [
-        { number: 1, label: "Basic Info", icon: FiHome },
-        { number: 2, label: "Location", icon: FiMapPin },
-        { number: 3, label: "Details", icon: FiHome },
-        { number: 4, label: "Pricing", icon: FiDollarSign },
-        { number: 5, label: "Amenities", icon: FiCheck },
+        { number: 1, label: "Basic Info",  sub: "Type & description",  icon: FiHome },
+        { number: 2, label: "Location",    sub: "Address & city",       icon: FiMapPin },
+        { number: 3, label: "Details",     sub: "Size & specs",         icon: FiHome },
+        { number: 4, label: "Pricing",     sub: "Price & payment",      icon: FiDollarSign },
+        { number: 5, label: "Media",       sub: "Photos & amenities",   icon: FiImage },
     ];
 
+    const stepSpec = (field, min, max) => ({
+        dec: () => setFormData(prev => ({
+            ...prev,
+            specifications: {
+                ...prev.specifications,
+                [field]: Math.max(min, Number(prev.specifications[field] || min) - 1)
+            }
+        })),
+        inc: () => setFormData(prev => ({
+            ...prev,
+            specifications: {
+                ...prev.specifications,
+                [field]: Math.min(max, Number(prev.specifications[field] || min) + 1)
+            }
+        })),
+        val: formData.specifications[field] === "" ? min : Number(formData.specifications[field])
+    });
+    const beds  = stepSpec("bedrooms",  1, 10);
+    const baths = stepSpec("bathrooms", 1, 6);
+    const balcs = stepSpec("balconies", 0, 5);
+
     return (
-        <div className="post-property-page">
-            <div className="post-property-container">
-                {/* Progress Steps */}
-                <div className="progress-steps">
-                    {steps.map((step) => (
+        <div className="pp-root">
+            {/* ── Sidebar ── */}
+            <aside className="pp-aside">
+                <div className="pp-brand">
+                    <span className="pp-brand-dot" />
+                    <span className="pp-brand-name">LogicWave</span>
+                </div>
+                <p className="pp-brand-sub">List your property</p>
+
+                <nav className="pp-step-rail">
+                    {steps.map((s) => (
                         <div
-                            key={step.number}
-                            className={`step ${currentStep >= step.number ? "active" : ""} ${currentStep > step.number ? "completed" : ""}`}
+                            key={s.number}
+                            className={`pp-step-item${currentStep === s.number ? " s-active" : ""}${currentStep > s.number ? " s-completed" : ""}`}
                         >
-                            <div className="step-icon">
-                                {currentStep > step.number ? <FiCheck /> : <step.icon />}
+                            <div className="pp-step-circle">
+                                {currentStep > s.number ? <FiCheck size={14} /> : s.number}
                             </div>
-                            <span className="step-label">{step.label}</span>
+                            <div className="pp-step-meta">
+                                <span className="pp-step-name">{s.label}</span>
+                                <span className="pp-step-sub">{s.sub}</span>
+                            </div>
                         </div>
                     ))}
-                </div>
+                </nav>
 
-                {/* Form Content */}
-                <div className="form-content">
+                <div className="pp-aside-footer">
+                    <p>Need help?</p>
+                    <a href="mailto:support@logicwave.in">support@logicwave.in</a>
+                </div>
+            </aside>
+
+            {/* ── Main ── */}
+            <div className="pp-main">
+                <div className="pp-main-inner">
                     {errors.submit && (
-                        <div className="error-banner">{errors.submit}</div>
+                        <div className="pp-error-banner"><FiX size={16}/> {errors.submit}</div>
                     )}
 
-                    {/* Step 1: Basic Info */}
+                    {/* ── Step 1 ── */}
                     {currentStep === 1 && (
-                        <div className="form-step">
-                                
-                            <h2>Basic Information</h2>
-                            <p className="step-description">Tell us about your property</p>
+                        <>
+                            <div className="pp-step-header">
+                                <span className="pp-step-counter">Step 1 / 5</span>
+                                <h1>Basic Information</h1>
+                                <p>Tell us about your property — what it is and how you want to list it.</p>
+                            </div>
 
-                            <div className="form-grid">
-                                <div className="form-group full-width">
-                                    <label>Property Title *</label>
+                            {/* Listing type tiles */}
+                            <div className="pp-field pp-full">
+                                <span className="pp-label">Listing Type</span>
+                                <div className="pp-type-tiles">
+                                    <button
+                                        type="button"
+                                        className={`pp-type-tile${formData.listingType === "buy" ? " pp-tile-active" : ""}`}
+                                        onClick={() => setFormData({ ...formData, listingType: "buy" })}
+                                    >
+                                        <FiHome size={22} />
+                                        <strong>Sell</strong>
+                                        <span>One-time ownership transfer</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`pp-type-tile${formData.listingType === "rent" ? " pp-tile-active" : ""}`}
+                                        onClick={() => setFormData({ ...formData, listingType: "rent" })}
+                                    >
+                                        <FiMapPin size={22} />
+                                        <strong>Rent</strong>
+                                        <span>Monthly rental income</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="pp-section-divider" />
+
+                            {/* Property type pills */}
+                            <div className="pp-field pp-full">
+                                <span className="pp-label">Property Type</span>
+                                <div className="pp-proptype-row">
+                                    {propertyTypes.map(t => (
+                                        <button
+                                            key={t.value}
+                                            type="button"
+                                            className={`pp-proptype-pill${formData.propertyType === t.value ? " pp-pill-active" : ""}`}
+                                            onClick={() => setFormData({ ...formData, propertyType: t.value })}
+                                        >
+                                            {t.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="pp-section-divider" />
+
+                            {/* Title + Description */}
+                            <div className="pp-grid">
+                                <div className={`pp-field pp-full${errors.title ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label" htmlFor="pp-title">Property Title <span>*</span></label>
                                     <input
+                                        id="pp-title"
                                         type="text"
                                         name="title"
                                         value={formData.title}
                                         onChange={handleChange}
                                         placeholder="e.g., 3 BHK Apartment in Sector 62"
-                                        className={errors.title ? "error" : ""}
                                     />
-                                    {errors.title && <span className="error-text">{errors.title}</span>}
+                                    {errors.title && <span className="pp-err-msg">{errors.title}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Listing Type *</label>
-                                    <div className="radio-group">
-                                        <label className={`radio-option ${formData.listingType === "buy" ? "selected" : ""}`}>
-                                            <input
-                                                type="radio"
-                                                name="listingType"
-                                                value="buy"
-                                                checked={formData.listingType === "buy"}
-                                                onChange={handleChange}
-                                            />
-                                            <span>Sell</span>
-                                        </label>
-                                        <label className={`radio-option ${formData.listingType === "rent" ? "selected" : ""}`}>
-                                            <input
-                                                type="radio"
-                                                name="listingType"
-                                                value="rent"
-                                                checked={formData.listingType === "rent"}
-                                                onChange={handleChange}
-                                            />
-                                            <span>Rent</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Property Type *</label>
-                                    <select name="propertyType" value={formData.propertyType} onChange={handleChange}>
-                                        {propertyTypes.map(type => (
-                                            <option key={type.value} value={type.value}>{type.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="form-group full-width">
-                                    <label>Description *</label>
+                                <div className={`pp-field pp-full${errors.description ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label" htmlFor="pp-desc">Description <span>*</span></label>
                                     <textarea
+                                        id="pp-desc"
                                         name="description"
                                         value={formData.description}
                                         onChange={handleChange}
-                                        placeholder="Describe your property in detail..."
+                                        placeholder="Describe your property — layout, surroundings, unique features…"
                                         rows={5}
-                                        className={errors.description ? "error" : ""}
                                     />
-                                    {errors.description && <span className="error-text">{errors.description}</span>}
+                                    {errors.description && <span className="pp-err-msg">{errors.description}</span>}
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
-                    {/* Step 2: Location */}
+                    {/* ── Step 2 ── */}
                     {currentStep === 2 && (
-                        <div className="form-step">
-                            <h2>Property Location</h2>
-                            <p className="step-description">Where is your property located?</p>
+                        <>
+                            <div className="pp-step-header">
+                                <span className="pp-step-counter">Step 2 / 5</span>
+                                <h1>Property Location</h1>
+                                <p>Where is your property? Accurate location helps buyers find you faster.</p>
+                            </div>
 
-                            <div className="form-grid">
-                                <div className="form-group full-width">
-                                    <label>Address *</label>
+                            <div className="pp-grid">
+                                <div className={`pp-field pp-full${errors["location.address"] ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">Street Address <span>*</span></label>
                                     <input
                                         type="text"
                                         name="location.address"
                                         value={formData.location.address}
                                         onChange={handleChange}
-                                        placeholder="Building name, Street name"
-                                        className={errors["location.address"] ? "error" : ""}
+                                        placeholder="Building name, street, area"
                                     />
-                                    {errors["location.address"] && <span className="error-text">{errors["location.address"]}</span>}
+                                    {errors["location.address"] && <span className="pp-err-msg">{errors["location.address"]}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>City *</label>
-                                    <select
-                                        name="location.city"
-                                        value={formData.location.city}
-                                        onChange={handleChange}
-                                        className={errors["location.city"] ? "error" : ""}
-                                    >
-                                        <option value="">Select City</option>
-                                        {cities.map(city => (
-                                            <option key={city} value={city}>{city}</option>
-                                        ))}
+                                <div className={`pp-field${errors["location.city"] ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">City <span>*</span></label>
+                                    <select name="location.city" value={formData.location.city} onChange={handleChange}>
+                                        <option value="">Select city</option>
+                                        {cities.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
-                                    {errors["location.city"] && <span className="error-text">{errors["location.city"]}</span>}
+                                    {errors["location.city"] && <span className="pp-err-msg">{errors["location.city"]}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>State *</label>
-                                    <select
-                                        name="location.state"
-                                        value={formData.location.state}
-                                        onChange={handleChange}
-                                        className={errors["location.state"] ? "error" : ""}
-                                    >
-                                        <option value="">Select State</option>
-                                        {states.map(state => (
-                                            <option key={state} value={state}>{state}</option>
-                                        ))}
+                                <div className={`pp-field${errors["location.state"] ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">State <span>*</span></label>
+                                    <select name="location.state" value={formData.location.state} onChange={handleChange}>
+                                        <option value="">Select state</option>
+                                        {states.map(s => <option key={s} value={s}>{s}</option>)}
                                     </select>
-                                    {errors["location.state"] && <span className="error-text">{errors["location.state"]}</span>}
+                                    {errors["location.state"] && <span className="pp-err-msg">{errors["location.state"]}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Pincode *</label>
+                                <div className={`pp-field${errors["location.pincode"] ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">Pincode <span>*</span></label>
                                     <input
                                         type="text"
                                         name="location.pincode"
@@ -532,133 +571,104 @@ const PostProperty = () => {
                                         onChange={handleChange}
                                         placeholder="6-digit pincode"
                                         maxLength={6}
-                                        className={errors["location.pincode"] ? "error" : ""}
                                     />
-                                    {errors["location.pincode"] && <span className="error-text">{errors["location.pincode"]}</span>}
+                                    {errors["location.pincode"] && <span className="pp-err-msg">{errors["location.pincode"]}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Landmark</label>
+                                <div className="pp-field">
+                                    <label className="pp-label">Landmark</label>
                                     <input
                                         type="text"
                                         name="location.landmark"
                                         value={formData.location.landmark}
                                         onChange={handleChange}
-                                        placeholder="Near metro station, hospital, etc."
+                                        placeholder="Near metro, hospital, school…"
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
-                    {/* Step 3: Specifications */}
+                    {/* ── Step 3 ── */}
                     {currentStep === 3 && (
-                        <div className="form-step">
-                            <h2>Property Details</h2>
-                            <p className="step-description">Provide specifications about your property</p>
+                        <>
+                            <div className="pp-step-header">
+                                <span className="pp-step-counter">Step 3 / 5</span>
+                                <h1>Property Details</h1>
+                                <p>Size, floors, furnishing — the specifics that matter to buyers.</p>
+                            </div>
 
-                            <div className="form-grid">
+                            <div className="pp-grid">
                                 {formData.propertyType !== "plot" && (
                                     <>
-                                        <div className="form-group">
-                                            <label>Bedrooms *</label>
-                                            <select
-                                                name="specifications.bedrooms"
-                                                value={formData.specifications.bedrooms}
-                                                onChange={handleChange}
-                                                className={errors["specifications.bedrooms"] ? "error" : ""}
-                                            >
-                                                <option value="">Select</option>
-                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-                                                    <option key={n} value={n}>{n} BHK</option>
-                                                ))}
-                                            </select>
+                                        <div className={`pp-field${errors["specifications.bedrooms"] ? " pp-field-err" : ""}`}>
+                                            <span className="pp-label">Bedrooms <span>*</span></span>
+                                            <div className="pp-stepper">
+                                                <button type="button" className="pp-stepper-btn" onClick={beds.dec}>−</button>
+                                                <span>{beds.val} BHK</span>
+                                                <button type="button" className="pp-stepper-btn" onClick={beds.inc}>+</button>
+                                            </div>
+                                            {errors["specifications.bedrooms"] && <span className="pp-err-msg">{errors["specifications.bedrooms"]}</span>}
                                         </div>
 
-                                        <div className="form-group">
-                                            <label>Bathrooms</label>
-                                            <select
-                                                name="specifications.bathrooms"
-                                                value={formData.specifications.bathrooms}
-                                                onChange={handleChange}
-                                            >
-                                                <option value="">Select</option>
-                                                {[1, 2, 3, 4, 5, 6].map(n => (
-                                                    <option key={n} value={n}>{n}</option>
-                                                ))}
-                                            </select>
+                                        <div className="pp-field">
+                                            <span className="pp-label">Bathrooms</span>
+                                            <div className="pp-stepper">
+                                                <button type="button" className="pp-stepper-btn" onClick={baths.dec}>−</button>
+                                                <span>{baths.val}</span>
+                                                <button type="button" className="pp-stepper-btn" onClick={baths.inc}>+</button>
+                                            </div>
                                         </div>
 
-                                        <div className="form-group">
-                                            <label>Balconies</label>
-                                            <select
-                                                name="specifications.balconies"
-                                                value={formData.specifications.balconies}
-                                                onChange={handleChange}
-                                            >
-                                                <option value="">Select</option>
-                                                {[0, 1, 2, 3, 4, 5].map(n => (
-                                                    <option key={n} value={n}>{n}</option>
-                                                ))}
-                                            </select>
+                                        <div className="pp-field">
+                                            <span className="pp-label">Balconies</span>
+                                            <div className="pp-stepper">
+                                                <button type="button" className="pp-stepper-btn" onClick={balcs.dec}>−</button>
+                                                <span>{balcs.val}</span>
+                                                <button type="button" className="pp-stepper-btn" onClick={balcs.inc}>+</button>
+                                            </div>
                                         </div>
                                     </>
                                 )}
 
-                                <div className="form-group">
-                                    <label>Carpet Area (sq.ft) *</label>
+                                <div className={`pp-field${errors["specifications.carpetArea"] ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">Carpet Area (sq.ft) <span>*</span></label>
                                     <input
                                         type="number"
                                         name="specifications.carpetArea"
                                         value={formData.specifications.carpetArea}
                                         onChange={handleChange}
-                                        placeholder="e.g., 1200"
-                                        className={errors["specifications.carpetArea"] ? "error" : ""}
+                                        placeholder="e.g. 1200"
                                     />
+                                    {errors["specifications.carpetArea"] && <span className="pp-err-msg">{errors["specifications.carpetArea"]}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Built-up Area (sq.ft)</label>
+                                <div className="pp-field">
+                                    <label className="pp-label">Built-up Area (sq.ft)</label>
                                     <input
                                         type="number"
                                         name="specifications.builtUpArea"
                                         value={formData.specifications.builtUpArea}
                                         onChange={handleChange}
-                                        placeholder="e.g., 1500"
+                                        placeholder="e.g. 1500"
                                     />
                                 </div>
 
                                 {formData.propertyType !== "plot" && (
                                     <>
-                                        <div className="form-group">
-                                            <label>Floor Number</label>
-                                            <input
-                                                type="number"
-                                                name="specifications.floorNumber"
-                                                value={formData.specifications.floorNumber}
-                                                onChange={handleChange}
-                                                placeholder="e.g., 5"
-                                            />
+                                        <div className="pp-field">
+                                            <label className="pp-label">Floor Number</label>
+                                            <input type="number" name="specifications.floorNumber" value={formData.specifications.floorNumber} onChange={handleChange} placeholder="e.g. 5" />
                                         </div>
 
-                                        <div className="form-group">
-                                            <label>Total Floors</label>
-                                            <input
-                                                type="number"
-                                                name="specifications.totalFloors"
-                                                value={formData.specifications.totalFloors}
-                                                onChange={handleChange}
-                                                placeholder="e.g., 12"
-                                            />
+                                        <div className="pp-field">
+                                            <label className="pp-label">Total Floors</label>
+                                            <input type="number" name="specifications.totalFloors" value={formData.specifications.totalFloors} onChange={handleChange} placeholder="e.g. 12" />
                                         </div>
 
-                                        <div className="form-group">
-                                            <label>Furnishing</label>
-                                            <select
-                                                name="specifications.furnishing"
-                                                value={formData.specifications.furnishing}
-                                                onChange={handleChange}
-                                            >
+                                        <div className="pp-field">
+                                            <label className="pp-label">Furnishing</label>
+                                            <select name="specifications.furnishing" value={formData.specifications.furnishing} onChange={handleChange}>
                                                 <option value="">Select</option>
                                                 <option value="unfurnished">Unfurnished</option>
                                                 <option value="semi-furnished">Semi-Furnished</option>
@@ -666,205 +676,181 @@ const PostProperty = () => {
                                             </select>
                                         </div>
 
-                                        <div className="form-group">
-                                            <label>Facing</label>
-                                            <select
-                                                name="specifications.facing"
-                                                value={formData.specifications.facing}
-                                                onChange={handleChange}
-                                            >
+                                        <div className="pp-field">
+                                            <label className="pp-label">Facing</label>
+                                            <select name="specifications.facing" value={formData.specifications.facing} onChange={handleChange}>
                                                 <option value="">Select</option>
-                                                <option value="north">North</option>
-                                                <option value="south">South</option>
-                                                <option value="east">East</option>
-                                                <option value="west">West</option>
-                                                <option value="north-east">North-East</option>
-                                                <option value="north-west">North-West</option>
-                                                <option value="south-east">South-East</option>
-                                                <option value="south-west">South-West</option>
+                                                {["north","south","east","west","north-east","north-west","south-east","south-west"].map(d => (
+                                                    <option key={d} value={d}>{d.replace(/-/g, "-").replace(/\b\w/g, l => l.toUpperCase())}</option>
+                                                ))}
                                             </select>
                                         </div>
                                     </>
                                 )}
 
-                                <div className="form-group">
-                                    <label>Age of Property (years)</label>
-                                    <input
-                                        type="number"
-                                        name="specifications.ageOfProperty"
-                                        value={formData.specifications.ageOfProperty}
-                                        onChange={handleChange}
-                                        placeholder="e.g., 2"
-                                    />
+                                <div className="pp-field">
+                                    <label className="pp-label">Age of Property (yrs)</label>
+                                    <input type="number" name="specifications.ageOfProperty" value={formData.specifications.ageOfProperty} onChange={handleChange} placeholder="e.g. 2" />
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Possession Status</label>
-                                    <select
-                                        name="specifications.possessionStatus"
-                                        value={formData.specifications.possessionStatus}
-                                        onChange={handleChange}
-                                    >
+                                <div className="pp-field">
+                                    <label className="pp-label">Possession Status</label>
+                                    <select name="specifications.possessionStatus" value={formData.specifications.possessionStatus} onChange={handleChange}>
                                         <option value="ready">Ready to Move</option>
                                         <option value="under-construction">Under Construction</option>
                                         <option value="new-launch">New Launch</option>
                                     </select>
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Parking Slots</label>
-                                    <input
-                                        type="number"
-                                        name="specifications.parkingSlots"
-                                        value={formData.specifications.parkingSlots}
-                                        onChange={handleChange}
-                                        placeholder="e.g., 1"
-                                    />
+                                <div className="pp-field">
+                                    <label className="pp-label">Parking Slots</label>
+                                    <input type="number" name="specifications.parkingSlots" value={formData.specifications.parkingSlots} onChange={handleChange} placeholder="e.g. 1" />
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
-                    {/* Step 4: Pricing */}
+                    {/* ── Step 4 ── */}
                     {currentStep === 4 && (
-                        <div className="form-step">
-                            <h2>Pricing Details</h2>
-                            <p className="step-description">Set the price for your property</p>
+                        <>
+                            <div className="pp-step-header">
+                                <span className="pp-step-counter">Step 4 / 5</span>
+                                <h1>Pricing Details</h1>
+                                <p>Set your asking price. You can always update it later from your dashboard.</p>
+                            </div>
 
-                            <div className="form-grid">
-                                <div className="form-group">
-                                    <label>Price (₹) *</label>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        placeholder={formData.listingType === "rent" ? "Monthly rent" : "Property price"}
-                                        className={errors.price ? "error" : ""}
-                                    />
-                                    {errors.price && <span className="error-text">{errors.price}</span>}
+                            <div className="pp-grid">
+                                <div className={`pp-field pp-full${errors.price ? " pp-field-err" : ""}`}>
+                                    <label className="pp-label">
+                                        {formData.listingType === "rent" ? "Monthly Rent (₹)" : "Asking Price (₹)"} <span>*</span>
+                                    </label>
+                                    <div className="pp-price-row">
+                                        <span className="pp-currency">₹</span>
+                                        <input
+                                            type="number"
+                                            name="price"
+                                            value={formData.price}
+                                            onChange={handleChange}
+                                            placeholder={formData.listingType === "rent" ? "25000" : "8500000"}
+                                        />
+                                    </div>
+                                    {formData.price && !errors.price && (
+                                        <span className="pp-price-hint">
+                                            ≈ ₹{Number(formData.price) >= 10000000
+                                                ? (Number(formData.price) / 10000000).toFixed(2) + " Cr"
+                                                : Number(formData.price) >= 100000
+                                                    ? (Number(formData.price) / 100000).toFixed(2) + " L"
+                                                    : Number(formData.price).toLocaleString("en-IN")}
+                                        </span>
+                                    )}
+                                    {errors.price && <span className="pp-err-msg">{errors.price}</span>}
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Maintenance Charges (₹/month)</label>
+                                <div className="pp-field">
+                                    <label className="pp-label">Maintenance (₹/month)</label>
                                     <input
                                         type="number"
                                         name="priceBreakdown.maintenanceCharges"
                                         value={formData.priceBreakdown.maintenanceCharges}
                                         onChange={handleChange}
-                                        placeholder="e.g., 5000"
+                                        placeholder="e.g. 5000"
                                     />
                                 </div>
 
-                                <div className="form-group full-width">
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            name="priceBreakdown.negotiable"
-                                            checked={formData.priceBreakdown.negotiable}
-                                            onChange={handleChange}
-                                        />
-                                        <span>Price is negotiable</span>
-                                    </label>
+                                <div className="pp-field pp-full">
+                                    <div
+                                        className={`pp-toggle-row${formData.priceBreakdown.negotiable ? " pp-toggle-on" : ""}`}
+                                        onClick={() => setFormData({
+                                            ...formData,
+                                            priceBreakdown: {
+                                                ...formData.priceBreakdown,
+                                                negotiable: !formData.priceBreakdown.negotiable
+                                            }
+                                        })}
+                                    >
+                                        <div>
+                                            <p className="pp-toggle-label">Price is negotiable</p>
+                                            <p className="pp-toggle-sub">Buyers will see a "negotiable" badge on your listing</p>
+                                        </div>
+                                        <div className={`pp-toggle-switch${formData.priceBreakdown.negotiable ? " pp-toggle-on" : ""}`} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
-                    {/* Step 5: Amenities & Highlights */}
+                    {/* ── Step 5 ── */}
                     {currentStep === 5 && (
-                        <div className="form-step">
-                            <h2>Media, Amenities & Highlights</h2>
-                            <p className="step-description">Add photos and features to make your property stand out</p>
+                        <>
+                            <div className="pp-step-header">
+                                <span className="pp-step-counter">Step 5 / 5</span>
+                                <h1>Media, Amenities &amp; Highlights</h1>
+                                <p>Great photos and clear features dramatically improve enquiry rates.</p>
+                            </div>
 
-                            <div className="section">
-                                <h3>Property Images</h3>
-                                <p className="section-note">Upload photos (JPG, PNG, WebP) - Max 10 images, 5MB each</p>
-                                <div className="highlights-input">
+                            {/* Upload zone */}
+                            <div className="pp-field pp-full">
+                                <span className="pp-label">Property Photos</span>
+                                <label
+                                    className={`pp-upload-zone${formData.images.length >= 10 ? " pp-upload-disabled" : ""}`}
+                                    htmlFor="pp-img-input"
+                                >
+                                    
+                                    <strong>Click to upload</strong>
+                                    <span>JPG, PNG, WebP · max 5 MB each · up to 10 photos</span>
                                     <input
+                                        id="pp-img-input"
                                         type="file"
-                                        id="image-file-input"
                                         multiple
                                         accept="image/jpeg,image/png,image/webp,image/gif"
                                         onChange={handleImageAdd}
                                         disabled={formData.images.length >= 10}
-                                        style={{ display: 'block', marginBottom: '12px' }}
+                                        style={{ display: "none" }}
                                     />
-                                </div>
-                                {errors.imageFile && <p style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '4px' }}>{errors.imageFile}</p>}
-                                
-                                {formData.images.length === 0 ? (
-                                    <div style={{ textAlign: 'center', padding: '40px', background: '#f9fafb', borderRadius: '12px', border: '2px dashed #d1d5db', marginTop: '16px' }}>
-                                        <FiImage style={{ fontSize: '48px', color: '#9ca3af', marginBottom: '12px' }} />
-                                        <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>No images added yet</p>
-                                        <p style={{ color: '#9ca3af', fontSize: '0.8rem' }}>Add at least one image to showcase your property</p>
-                                    </div>
-                                ) : (
-                                    <div className="image-preview-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px', marginTop: '16px' }}>
-                                        {formData.images.map((img, index) => (
-                                            <div key={index} className="image-preview-card" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e5e7eb', background: '#f3f4f6' }}>
-                                                {img.isPrimary && (
-                                                    <div style={{ position: 'absolute', top: '8px', left: '8px', background: '#f97316', color: 'white', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '600', zIndex: 2, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-                                                        Main Photo
-                                                    </div>
-                                                )}
-                                                <button 
-                                                    onClick={() => handleImageRemove(index)} 
-                                                    style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2, transition: 'background 0.2s' }}
-                                                    onMouseOver={(e) => e.currentTarget.style.background = '#ef4444'}
-                                                    onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.7)'}
-                                                >
-                                                    <FiX size={16} />
-                                                </button>
-                                                <img 
-                                                    src={img.url} 
-                                                    alt={`Property ${index + 1}`}
-                                                    style={{ width: '100%', height: '150px', objectFit: 'cover', display: 'block' }}
-                                                    onError={(e) => {
-                                                        e.target.style.display = 'none';
-                                                        e.target.nextSibling.style.display = 'flex';
-                                                    }}
-                                                />
-                                                <div style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '150px', background: '#fee2e2', color: '#991b1b', flexDirection: 'column', gap: '8px' }}>
-                                                    <FiImage size={24} />
-                                                    <span style={{ fontSize: '0.75rem', textAlign: 'center', padding: '0 8px' }}>Failed to load</span>
-                                                </div>
-                                                <div style={{ padding: '8px', background: 'white', borderTop: '1px solid #e5e7eb' }}>
-                                                    <p style={{ fontSize: '0.75rem', color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>Image {index + 1}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                                
-                                <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '12px' }}>
-                                    💡 Tip: Use high-quality images from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" style={{ color: '#06d6a0' }}>Unsplash</a> or upload to <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" style={{ color: '#06d6a0' }}>Imgur</a>
-                                </p>
+                                </label>
+                                {errors.imageFile && <span className="pp-err-msg">{errors.imageFile}</span>}
                             </div>
 
-                            <div className="section">
-                                <h3>Amenities</h3>
-                                <div className="amenities-grid">
-                                    {amenitiesList.map((amenity) => (
-                                        <label
-                                            key={amenity}
-                                            className={`amenity-option ${formData.amenities.includes(amenity) ? "selected" : ""}`}
+                            {formData.images.length > 0 && (
+                                <div className="pp-img-grid">
+                                    {formData.images.map((img, idx) => (
+                                        <div key={idx} className="pp-img-card">
+                                            {img.isPrimary && <span className="pp-img-primary-badge">Main</span>}
+                                            <button className="pp-img-remove" onClick={() => handleImageRemove(idx)} type="button">
+                                                <FiX size={14} />
+                                            </button>
+                                            <img src={img.url} alt={`property-${idx + 1}`} />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="pp-section-divider" />
+
+                            {/* Amenities chips */}
+                            <div className="pp-field pp-full">
+                                <span className="pp-label">Amenities</span>
+                                <div className="pp-chips-grid">
+                                    {amenitiesList.map((a) => (
+                                        <button
+                                            key={a}
+                                            type="button"
+                                            className={`pp-chip${formData.amenities.includes(a) ? " pp-chip-on" : ""}`}
+                                            onClick={() => handleAmenityToggle(a)}
                                         >
-                                            <input
-                                                type="checkbox"
-                                                checked={formData.amenities.includes(amenity)}
-                                                onChange={() => handleAmenityToggle(amenity)}
-                                            />
-                                            <span>{amenity.replace(/-/g, " ")}</span>
-                                        </label>
+                                            {formData.amenities.includes(a) && <FiCheck size={12} />}
+                                            {a.replace(/-/g, " ")}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="section">
-                                <h3>Property Highlights</h3>
-                                <p className="section-note">Add up to 6 key highlights about your property</p>
-                                <div className="highlights-input">
+                            <div className="pp-section-divider" />
+
+                            {/* Highlights */}
+                            <div className="pp-field pp-full">
+                                <span className="pp-label">Key Highlights <small>(up to 6)</small></span>
+                                <div className="pp-highlight-row">
                                     <input
                                         type="text"
                                         id="highlight-input"
@@ -873,45 +859,42 @@ const PostProperty = () => {
                                     />
                                     <button
                                         type="button"
+                                        className="pp-highlight-add-btn"
                                         onClick={handleHighlightAdd}
                                         disabled={formData.highlights.length >= 6}
                                     >
-                                        <FiPlus /> Add
+                                        <FiPlus size={16} /> Add
                                     </button>
                                 </div>
-                                <div className="highlights-list">
-                                    {formData.highlights.map((highlight, index) => (
-                                        <span key={index} className="highlight-tag">
-                                            {highlight}
-                                            <button onClick={() => handleHighlightRemove(index)}>
-                                                <FiX />
-                                            </button>
-                                        </span>
-                                    ))}
-                                </div>
+                                {formData.highlights.length > 0 && (
+                                    <div className="pp-tags">
+                                        {formData.highlights.map((h, i) => (
+                                            <span key={i} className="pp-tag">
+                                                {h}
+                                                <button type="button" className="pp-tag-remove" onClick={() => handleHighlightRemove(i)}>
+                                                    <FiX size={12} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                        </>
                     )}
+                </div>
 
-                    {/* Navigation Buttons */}
-                    <div className="form-navigation">
+                {/* ── Sticky nav bar ── */}
+                <div className="pp-nav-bar">
+                    <span className="pp-nav-progress">Step <strong>{currentStep}</strong> of 5</span>
+                    <div className="pp-nav-buttons">
                         {currentStep > 1 && (
-                            <button type="button" className="btn-outline" onClick={handlePrev}>
-                                Previous
-                            </button>
+                            <button type="button" className="pp-btn-back" onClick={handlePrev}>Back</button>
                         )}
                         {currentStep < 5 ? (
-                            <button type="button" className="btn-primary" onClick={handleNext}>
-                                Next Step
-                            </button>
+                            <button type="button" className="pp-btn-next" onClick={handleNext}>Continue</button>
                         ) : (
-                            <button
-                                type="button"
-                                className="btn-primary"
-                                onClick={handleSubmit}
-                                disabled={loading}
-                            >
-                                {loading ? "Publishing..." : "Publish Property"}
+                            <button type="button" className="pp-btn-submit" onClick={handleSubmit} disabled={loading}>
+                                {loading ? "Publishing…" : "Publish Property"}
                             </button>
                         )}
                     </div>
