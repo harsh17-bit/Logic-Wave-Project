@@ -22,7 +22,6 @@ const FeaturedProjects = () => {
         setLoading(false);
       }
     };
-
     fetchFeatured();
   }, []);
 

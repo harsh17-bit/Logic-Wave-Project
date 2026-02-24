@@ -31,13 +31,10 @@ const Hero = () => {
   };
 
   return (
+    
     <div className="hero">
  
       <div className="hero-container">
-        {/* Top Badge */}
-        <div className="hero-badge">
-          <span>LET US GUIDE YOUR HOME</span>
-        </div>
         {/* Main Heading */}
         <h1 className="hero-title">Find Your Perfect Home</h1>
 

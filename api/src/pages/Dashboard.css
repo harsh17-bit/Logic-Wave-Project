@@ -594,6 +594,63 @@
     color: #dc2626;
 }
 
+.btn-icon.feature:hover {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.btn-icon.feature.featured {
+    color: #f59e0b;
+    background: #fef3c7;
+}
+
+.btn-icon.feature.featured:hover {
+    background: #fde68a;
+    color: #b45309;
+}
+
+/* Disabled featured button — no pointer, muted hover */
+.btn-icon.feature:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.btn-icon.feature.featured:disabled:hover {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+/* Featured column in Properties tab */
+.featured-status-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+}
+
+.featured-star-active {
+    color: #f59e0b;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.featured-until-text {
+    font-size: 0.78rem;
+    color: #d97706;
+    font-weight: 500;
+}
+
+.featured-expired-text {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.text-muted {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
 /* Profile Form */
 .profile-form {
     background: white;

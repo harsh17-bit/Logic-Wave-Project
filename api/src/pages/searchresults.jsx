@@ -24,10 +24,6 @@ const SearchResults = () => {
         city: searchParams.get("city") || "",
         minPrice: searchParams.get("minPrice") || "",
         maxPrice: searchParams.get("maxPrice") || "",
-        bedrooms: searchParams.get("bedrooms") || "",
-        minArea: searchParams.get("minArea") || "",
-        maxArea: searchParams.get("maxArea") || "",
-        furnishing: searchParams.get("furnishing") || "",
         sort: searchParams.get("sort") || "newest",
     });
 
@@ -84,10 +80,6 @@ const SearchResults = () => {
             city: "",
             minPrice: "",
             maxPrice: "",
-            bedrooms: "",
-            minArea: "",
-            maxArea: "",
-            furnishing: "",
             sort: "newest",
         });
         setSearchParams(new URLSearchParams());
@@ -193,52 +185,7 @@ const SearchResults = () => {
                             </div>
                         </div>
 
-                        <div className="filter-group">
-                            <label>Bedrooms</label>
-                            <div className="bedroom-buttons">
-                                {["", "1", "2", "3", "4", "5+"].map(num => (
-                                    <button
-                                        key={num}
-                                        className={filters.bedrooms === num ? "active" : ""}
-                                        onClick={() => handleFilterChange("bedrooms", num)}
-                                    >
-                                        {num || "Any"}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
 
-                        <div className="filter-group">
-                            <label>Area (sq ft)</label>
-                            <div className="range-inputs">
-                                <input
-                                    type="number"
-                                    placeholder="Min"
-                                    value={filters.minArea}
-                                    onChange={(e) => handleFilterChange("minArea", e.target.value)}
-                                />
-                                <span>to</span>
-                                <input
-                                    type="number"
-                                    placeholder="Max"
-                                    value={filters.maxArea}
-                                    onChange={(e) => handleFilterChange("maxArea", e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="filter-group">
-                            <label>Furnishing</label>
-                            <select
-                                value={filters.furnishing}
-                                onChange={(e) => handleFilterChange("furnishing", e.target.value)}
-                            >
-                                <option value="">Any</option>
-                                <option value="unfurnished">Unfurnished</option>
-                                <option value="semi-furnished">Semi-Furnished</option>
-                                <option value="fully-furnished">Fully Furnished</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div className="filter-actions">

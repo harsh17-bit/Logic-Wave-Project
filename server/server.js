@@ -12,6 +12,7 @@ const inquiryRoutes = require("./routes/inquiryroutes");
 const reviewRoutes = require("./routes/reviewroutes");
 const alertRoutes = require("./routes/alertroutes");
 const projectRoutes = require("./routes/projectroutes");
+const paymentRoutes = require("./routes/paymentroutes");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/alerts", alertRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Health check
 app.get("/", (req, res) => {
@@ -55,6 +57,7 @@ app.get("/", (req, res) => {
             reviews: "/api/reviews",
             alerts: "/api/alerts",
             projects: "/api/projects",
+            payments: "/api/payments",
         },
         },);
 });

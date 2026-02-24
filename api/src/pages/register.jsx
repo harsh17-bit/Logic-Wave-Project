@@ -7,10 +7,6 @@ import {
     FiPhone,
     FiEye,
     FiEyeOff,
-    FiCheckCircle,
-    FiHome,
-    FiShield,
-    FiMapPin,
 } from "react-icons/fi";
 import { useAuth } from "../context/authcontext.jsx";
 import "./Register.css";

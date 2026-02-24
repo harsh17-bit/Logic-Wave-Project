@@ -22,17 +22,17 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     setIsProfileOpen(true);
-    setIsMenuOpen(false);
+    setIsMenuOpen(true);
     navigate("/");
   };
 
   return (
-   <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm transition-all duration-300">
+   <header className="relative top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 group">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold align-left">
               <span className="brand-gradient">Urban</span>
               <span className="brand-accent">Stay</span>
             </h1>
@@ -77,7 +77,7 @@ const Header = () => {
                     <Link
                       to="/dashboard"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
+                      onClick={() => setIsProfileOpen(true)}
                     >
                       <FiGrid className="w-4 h-4" />
                       Dashboard
@@ -147,7 +147,7 @@ const Header = () => {
                 <Link
                   to="/dashboard"
                   className="flex items-center justify-center gap-2 w-full py-3 text-gray-700 font-medium border border-gray-200 rounded-xl hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => setIsMenuOpen(true)}
                 >
                   <FiGrid className="w-4 h-4" />
                   Dashboard

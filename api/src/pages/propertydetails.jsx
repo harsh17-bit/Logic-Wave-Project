@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   FiHeart, FiShare2, FiMapPin, FiHome, FiMaximize, FiLayers,
   FiCheck, FiPhone, FiMessageSquare, FiChevronLeft, FiChevronRight,
-  FiStar, FiShield, FiPrinter, FiX,  FiTrendingUp, FiCloud, FiGlobe, FiExternalLink
+  FiStar, FiShield, FiPrinter, FiX, FiFileText, FiTrendingUp, FiCloud, FiGlobe, FiExternalLink
 } from "react-icons/fi";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -14,6 +14,8 @@ import { inquiryService, reviewService } from "../services/dataservice";
 import { weatherService } from "../services/weatherservice";
 import { getImageUrl } from "../utils/imageUtils";
 import PropertyCard from "../components/propertycard";
+import RentalAgreement from "../components/RentalAgreement";
+import BuyerAgreement from "../components/BuyerAgreement";
 import "./PropertyDetails.css";
 
 
@@ -44,6 +46,8 @@ const PropertyDetails = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [weather, setWeather] = useState(null);
   
+  const [showRentalAgreement, setShowRentalAgreement] = useState(false);
+  const [showBuyerAgreement, setShowBuyerAgreement] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
   const [reviewData, setReviewData] = useState({
@@ -100,19 +104,17 @@ const PropertyDetails = () => {
   }, [id, user, isAuthenticated]);
 
   useEffect(() => {
-    if (property?.location?.city) {
-      fetchWeather();
-    }
+    if (!property?.location?.city) return;
+    const fetchWeather = async () => {
+      try {
+        const weatherData = await weatherService.getWeatherByCity(property.location.city);
+        setWeather(weatherData);
+      } catch (error) {
+        console.error('Error fetching weather:', error);
+      }
+    };
+    fetchWeather();
   }, [property]);
-
-  const fetchWeather = async () => {
-    try {
-      const weatherData = await weatherService.getWeatherByCity(property.location.city);
-      setWeather(weatherData);
-    } catch (error) {
-      console.error('Error fetching weather:', error);
-    } 
-  };
 
   const handleFavoriteToggle = async () => {
     if (!isAuthenticated) {
@@ -270,6 +272,10 @@ const PropertyDetails = () => {
           <img
             src={getImageUrl(property.images?.[currentImageIndex]?.url)}
             alt={property.title}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23e5e7eb' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' font-size='28' fill='%239ca3af' text-anchor='middle' dominant-baseline='middle'%3ENo Image%3C/text%3E%3C/svg%3E`;
+            }}
           />
           {property.images?.length > 1 && (
             <>
@@ -293,7 +299,14 @@ const PropertyDetails = () => {
                 className={`thumbnail ${currentImageIndex === index ? "active" : ""}`}
                 onClick={() => setCurrentImageIndex(index)}
               >
-                <img src={getImageUrl(img.url)} alt="" />
+                <img
+                  src={getImageUrl(img.url)}
+                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Crect fill='%23e5e7eb' width='200' height='150'/%3E%3C/svg%3E`;
+                  }}
+                />
                 {index === 4 && property.images.length > 5 && (
                   <span className="more-count">+{property.images.length - 5}</span>
                 )}
@@ -773,6 +786,30 @@ const PropertyDetails = () => {
                 </div>
               ) : (
                 <>
+                  {(property.listingType === "rent" || property.listingType === "pg") && (
+                    <button
+                      className="btn-primary"
+                      style={{ background: "linear-gradient(135deg,#1e3a5f,#2563eb)", marginBottom: "0.5rem" }}
+                      onClick={() => {
+                        if (!isAuthenticated) { Navigate("/login"); return; }
+                        setShowRentalAgreement(true);
+                      }}
+                    >
+                      <FiFileText /> Generate Rental Agreement
+                    </button>
+                  )}
+                  {property.listingType === "buy" && (
+                    <button
+                      className="btn-primary"
+                      style={{ background: "linear-gradient(135deg,#064e3b,#059669)", marginBottom: "0.5rem" }}
+                      onClick={() => {
+                        if (!isAuthenticated) { Navigate("/login"); return; }
+                        setShowBuyerAgreement(true);
+                      }}
+                    >
+                      <FiFileText /> Generate Buyer Agreement
+                    </button>
+                  )}
                   <button className="btn-primary" onClick={() => {
                     if (!isAuthenticated) {
                       Navigate("/login");
@@ -880,6 +917,24 @@ const PropertyDetails = () => {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Rental Agreement Modal */}
+      {showRentalAgreement && (
+        <RentalAgreement
+          property={property}
+          user={user}
+          onClose={() => setShowRentalAgreement(false)}
+        />
+      )}
+
+      {/* Buyer Agreement Modal */}
+      {showBuyerAgreement && (
+        <BuyerAgreement
+          property={property}
+          user={user}
+          onClose={() => setShowBuyerAgreement(false)}
+        />
       )}
     </div>
   );

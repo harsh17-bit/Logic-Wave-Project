@@ -16,7 +16,6 @@ import FeaturedProjects from './components/FeaturedProjects'
 import PopularTools from './components/PopularTools'
 import TestimonialsSection from './components/TestimonialsSection'
 
-
 // Pages
 import PropertyDetails from "./pages/propertydetails.jsx"
 import Login from "./pages/login.jsx"
@@ -46,7 +45,6 @@ const HomePage = () => {
       <TopCities />
       <PopularTools />
       <FeaturedProjects />
-      
       <TestimonialsSection />
     </>
   )
@@ -124,7 +122,6 @@ function AppContent() {
           <Route path="/properties" element={<SearchResults />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
-          
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/faq" element={<FAQ />} />

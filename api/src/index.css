@@ -89,13 +89,6 @@ h1, h2, h3, h4, h5, h6 {
     --text-secondary: var(--color-text-muted);
     --border-color: var(--color-border);
   }
-  
-  .property-card,
-  .card,
-  .search-card {
-    background: var(--color-surface);
-    border-color: var(--color-border);
-  }
 }
 /* Particles background styling */
 #tsparticles {

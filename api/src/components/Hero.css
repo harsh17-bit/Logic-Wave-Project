@@ -112,6 +112,12 @@
   min-height: 56px;
 }
 
+.hero-search-input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
 .hero-search-input::placeholder {
   color: #94a3b8;
   font-weight: 300;
