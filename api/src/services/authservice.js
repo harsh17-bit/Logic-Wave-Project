@@ -27,8 +27,8 @@ export const authService = {
     register: async (userData) => {
         const response = await api.post("/auth/register", userData);
         if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            sessionStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("user", JSON.stringify(response.data.user));
         }
         return response.data;
     },
@@ -58,19 +58,19 @@ export const authService = {
     login: async (credentials) => {
         const response = await api.post("/auth/login", credentials);
         if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            sessionStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("user", JSON.stringify(response.data.user));
         }
         return response.data;
     },
 
     /**
      * Logout current user
-     * Clears all authentication data from localStorage
+     * Clears all authentication data from sessionStorage
      */
     logout: () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
     },
 
     /**
@@ -86,7 +86,7 @@ export const authService = {
 
     /**
      * Update user profile information
-     * Updates localStorage with new user data upon success
+     * Updates sessionStorage with new user data upon success
      * 
      * @param {Object} data - Profile fields to update
      * @returns {Promise<Object>} Updated user profile
@@ -94,7 +94,7 @@ export const authService = {
     updateProfile: async (data) => {
         const response = await api.put("/auth/updateprofile", data);
         if (response.data.user) {
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            sessionStorage.setItem("user", JSON.stringify(response.data.user));
         }
         return response.data;
     },
