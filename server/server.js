@@ -1,7 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
+
+// Ensure uploads directory exists (needed on Render where the folder isn't in git)
+const uploadsDir = path.join(__dirname, "uploads", "propertyimages");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // Fail fast if required env vars are missing
 const REQUIRED_ENV = ["MONGODB_URI", "JWT_SECRET"];
