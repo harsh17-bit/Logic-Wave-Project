@@ -26,7 +26,7 @@ const FAQ = () => {
                 },
                 {
                     question: "How do I contact support?",
-                    answer: "You can contact our support team via email at support@logicwaveproperty.com or call +91 1800-XXX-XXXX. We typically respond within 24 hours."
+                    answer: "You can contact our support team via email at support@logicwaveproperty.com. We typically respond within 24 hours."
                 }
             ]
         },

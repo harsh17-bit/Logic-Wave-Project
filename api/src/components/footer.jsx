@@ -1,4 +1,4 @@
-import { FiMail, FiPhone, FiMapPin, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -6,9 +6,7 @@ const Footer = () => {
 
   const companyLinks = [
     { label: "About Us", href: "/about-us" },
-    { label: "Contact", href: "#contact" },
-    { label: "Careers", href: "#careers" },
-    { label: "Blog", href: "#blog" },
+    { label: "Contact", href: "/about-us" },
   ];
 
   const serviceLinks = [
@@ -17,12 +15,7 @@ const Footer = () => {
     { label: "Post Property", href: "/post-property" },
   ];
 
-  const socialLinks = [
-    { icon: FiFacebook, href: "#", label: "Facebook" },
-    { icon: FiTwitter, href: "#", label: "Twitter" },
-    { icon: FiInstagram, href: "#", label: "Instagram" },
-    { icon: FiLinkedin, href: "#", label: "LinkedIn" },
-  ];
+
 
   return (
     <footer className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-300 mt-20 overflow-hidden">
@@ -47,19 +40,7 @@ const Footer = () => {
               Your trusted platform to buy, rent, and sell properties across India.
               We make finding your dream home simple and seamless.
             </p>
-            {/* Social Links */}
-            <div className="flex items-center gap-3">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-gray-400 hover:bg-[var(--color-primary)] hover:text-white hover:border-transparent hover:scale-110 transition-all duration-300"
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+
           </div>
 
           {/* Company Links */}
@@ -123,13 +104,13 @@ const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:support@urbanstay.com"
+                  href="mailto:support@logicwaveproperty.com"
                   className="flex items-center gap-3 text-gray-400 hover:text-[var(--color-accent)] transition-colors duration-300 text-sm group"
                 >
                   <span className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover:bg-[var(--color-primary)]/15 group-hover:border-[var(--color-primary)]/25 transition-all duration-300">
                     <FiMail className="w-4 h-4" />
                   </span>
-                  support@urbanstay.com
+                  support@logicwaveproperty.com
                 </a>
               </li>
               <li>

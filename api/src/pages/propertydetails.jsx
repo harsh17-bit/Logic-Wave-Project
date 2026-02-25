@@ -788,26 +788,26 @@ const PropertyDetails = () => {
                 <>
                   {(property.listingType === "rent" || property.listingType === "pg") && (
                     <button
-                      className="btn-primary"
-                      style={{ background: "linear-gradient(135deg,#1e3a5f,#2563eb)", marginBottom: "0.5rem" }}
+                      
+                      
                       onClick={() => {
                         if (!isAuthenticated) { Navigate("/login"); return; }
                         setShowRentalAgreement(true);
                       }}
                     >
-                      <FiFileText /> Generate Rental Agreement
+                      <FiFileText /> Rental Agreement
                     </button>
                   )}
                   {property.listingType === "buy" && (
                     <button
                       className="btn-primary"
-                      style={{ background: "linear-gradient(135deg,#064e3b,#059669)", marginBottom: "0.5rem" }}
+   
                       onClick={() => {
                         if (!isAuthenticated) { Navigate("/login"); return; }
                         setShowBuyerAgreement(true);
                       }}
                     >
-                      <FiFileText /> Generate Buyer Agreement
+                      <FiFileText /> Buyer Agreement
                     </button>
                   )}
                   <button className="btn-primary" onClick={() => {

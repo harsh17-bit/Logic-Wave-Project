@@ -1,7 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineMenuAlt3, HiX } from "react-icons/hi";
-import { FiUser, FiHome, FiLogOut, FiGrid, FiSettings } from "react-icons/fi";
+import { FiUser, FiLogOut, FiGrid } from "react-icons/fi";
 import { useAuth } from "../context/authcontext.jsx";
 
 const Header = () => {
@@ -13,79 +13,79 @@ const Header = () => {
   const navLinks = [
     { label: "Buy", href: "/properties?listingType=buy" },
     { label: "Rent", href: "/properties?listingType=rent" },
-    { label: "Sell", href: "/post-property" }, 
+    { label: "Sell", href: "/post-property" },
     { label: "About Us", href: "/about-us" },
     { label: "FAQs", href: "/faq" },
-    { label: "Privacy Policy",href:"/privacy-policy" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
   ];
 
   const handleLogout = () => {
     logout();
-    setIsProfileOpen(true);
-    setIsMenuOpen(true);
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
     navigate("/");
   };
 
   return (
-   <header className="relative top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 group">
-            <h1 className="text-2xl font-bold align-left">
+          <Link to="/" className="flex-shrink-0">
+            <h1 className="text-xl font-bold tracking-tight">
               <span className="brand-gradient">Urban</span>
               <span className="brand-accent">Stay</span>
             </h1>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.href}
-                className="relative px-4 py-2 text-gray-600 font-medium text-sm transition-all duration-300 hover:text-[var(--color-primary)] group"
+                className="px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors"
               >
                 {link.label}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[var(--color-primary)] transition-all duration-300 group-hover:w-3/4 rounded-full"></span>
               </Link>
             ))}
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-full  transition-all focus:outline-none"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors focus:outline-none"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold text-sm">
+                  <div className="w-7 h-7 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
                     {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                   </div>
-                  <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate">{user?.name || "User"}</span>
+                  <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate">
+                    {user?.name || "User"}
+                  </span>
                 </button>
 
                 {/* Profile Dropdown */}
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                  <div className="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
+                    <div className="px-3 py-2 border-b border-gray-100 mb-1">
                       <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                      <p className="text-xs text-gray-400 truncate">{user?.email}</p>
                     </div>
-
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-                      onClick={() => setIsProfileOpen(true)}
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      <FiGrid className="w-4 h-4" />
+                      <FiGrid className="w-4 h-4 text-gray-400" />
                       Dashboard
                     </Link>
-
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600  transition-colors text-left"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors text-left"
                     >
                       <FiLogOut className="w-4 h-4" />
                       Sign Out
@@ -94,8 +94,11 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="flex items-center gap-2 px-4 py-2 text-gray-700 font-medium text-sm border border-gray-200 rounded-full transition-all duration-300 hover:shadow-md">
-                <FiUser className="w-4 h-4" />
+              <Link
+                to="/login"
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <FiUser className="w-3.5 h-3.5" />
                 Login
               </Link>
             )}
@@ -104,27 +107,25 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-600 hover:text-[var(--color-primary)] hover:bg-gray-50 rounded-lg transition-colors duration-300"
+            className="md:hidden p-2 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? (
-              <HiX className="w-6 h-6" />
-            ) : (
-              <HiOutlineMenuAlt3 className="w-6 h-6" />
-            )}
+            {isMenuOpen ? <HiX className="w-5 h-5" /> : <HiOutlineMenuAlt3 className="w-5 h-5" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-[500px] pb-6" : "max-h-0"}`}
+          className={`md:hidden overflow-hidden transition-all duration-200 ease-in-out ${
+            isMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"
+          }`}
         >
-          <nav className="flex flex-col gap-1 pt-2">
+          <nav className="flex flex-col border-t border-gray-100 pt-1">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.href}
-                className="px-4 py-3 text-gray-600 font-medium hover:text-[var(--color-primary)] hover:bg-gray-50 rounded-lg transition-all duration-200"
+                className="px-3 py-2.5 text-sm text-gray-600 font-medium hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}
@@ -132,36 +133,40 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex flex-col gap-3 mt-4 px-2 border-t border-gray-100 pt-4">
+          <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-gray-100">
             {isAuthenticated ? (
               <>
-                <div className="flex items-center gap-3 px-2 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold">
+                <div className="flex items-center gap-3 px-1 mb-1">
+                  <div className="w-9 h-9 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                     {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-800">{user?.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{user?.email}</p>
                   </div>
                 </div>
                 <Link
                   to="/dashboard"
-                  className="flex items-center justify-center gap-2 w-full py-3 text-gray-700 font-medium border border-gray-200 rounded-xl hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(true)}
+                  className="flex items-center gap-2 w-full py-2.5 px-3 text-sm text-gray-700 font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiGrid className="w-4 h-4" />
+                  <FiGrid className="w-4 h-4 text-gray-400" />
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 w-full py-3 text-red-600 font-medium border border-red-100 bg-red-50 rounded-xl hover:bg-red-100"
+                  className="flex items-center gap-2 w-full py-2.5 px-3 text-sm text-red-500 font-medium border border-red-100 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
                 >
                   <FiLogOut className="w-4 h-4" />
                   Sign Out
                 </button>
               </>
             ) : (
-              <Link to="/login" className="flex items-center justify-center gap-2 w-full py-3 text-gray-700 font-medium border rounded-xl hover:text-[var(--color-primary)] transition-all duration-300" onClick={() => setIsMenuOpen(false)}>
+              <Link
+                to="/login"
+                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm text-gray-700 font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 <FiUser className="w-4 h-4" />
                 Login
               </Link>

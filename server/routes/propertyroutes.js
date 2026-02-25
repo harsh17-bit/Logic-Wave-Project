@@ -55,7 +55,7 @@ router.get("/:id/similar", getSimilarProperties);
 router.post("/", protect, authorize("seller", "admin"), upload.array('images', 10), createProperty);
 router.put("/:id/verify", protect, authorize("admin"), verifyProperty);
 router.put("/:id/feature", protect, authorize("admin"), featureProperty);
-router.put("/:id", protect, updateProperty);
+router.put("/:id", protect, upload.array('images', 10), updateProperty);
 router.delete("/:id", protect, deleteProperty);
 
 module.exports = router;

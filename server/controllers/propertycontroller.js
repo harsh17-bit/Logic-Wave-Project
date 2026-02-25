@@ -339,7 +339,57 @@ exports.updateProperty = async (req, res) => {
             });
         }
 
-        property = await Property.findByIdAndUpdate(req.params.id, req.body, {
+        // Build update payload — supports both multipart/form-data and plain JSON
+        const isMultipart = req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data');
+
+        let updateData;
+        if (isMultipart) {
+            const location      = req.body.location      ? JSON.parse(req.body.location)      : undefined;
+            const specifications = req.body.specifications ? JSON.parse(req.body.specifications) : undefined;
+            const amenities     = req.body.amenities     ? JSON.parse(req.body.amenities)     : undefined;
+            const highlights    = req.body.highlights    ? JSON.parse(req.body.highlights)    : undefined;
+            const priceBreakdown = req.body.priceBreakdown ? JSON.parse(req.body.priceBreakdown) : undefined;
+
+            // Existing images preserved from the client
+            let existingImages = [];
+            if (req.body.existingImages) {
+                try { existingImages = JSON.parse(req.body.existingImages); } catch (e) { existingImages = []; }
+            }
+
+            // Newly uploaded files
+            let newImages = [];
+            if (req.files && req.files.length > 0) {
+                newImages = req.files.map((file, index) => ({
+                    url: `/uploads/propertyimages/${file.filename}`,
+                    caption: "",
+                    isPrimary: false,
+                }));
+            }
+
+            const allImages = [...existingImages, ...newImages];
+            // Ensure at least one primary
+            if (allImages.length > 0 && !allImages.some(img => img.isPrimary)) {
+                allImages[0].isPrimary = true;
+            }
+
+            updateData = {
+                ...(req.body.title       && { title: req.body.title }),
+                ...(req.body.description && { description: req.body.description }),
+                ...(req.body.listingType  && { listingType: req.body.listingType }),
+                ...(req.body.propertyType && { propertyType: req.body.propertyType }),
+                ...(req.body.price       && { price: Number(req.body.price) }),
+                ...(location      && { location }),
+                ...(specifications && { specifications }),
+                ...(amenities     && { amenities }),
+                ...(highlights    && { highlights }),
+                ...(priceBreakdown && { priceBreakdown }),
+                ...(allImages.length > 0 && { images: allImages }),
+            };
+        } else {
+            updateData = req.body;
+        }
+
+        property = await Property.findByIdAndUpdate(req.params.id, updateData, {
             returnDocument: 'after',
             runValidators: true,
         });
@@ -350,9 +400,13 @@ exports.updateProperty = async (req, res) => {
         });
     } catch (error) {
         console.error("Update property error:", error);
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ success: false, message: "Validation failed", details: error.message, errors });
+        }
         res.status(500).json({
             success: false,
-            message: "Error updating property",
+            message: error.message || "Error updating property",
         });
     }
 };

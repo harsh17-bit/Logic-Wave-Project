@@ -1,6 +1,7 @@
 .top-cities {
   padding: 48px 20px 56px;
-  background: #e5ebe6;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
 }
 
 .top-cities-container {

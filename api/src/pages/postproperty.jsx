@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     FiHome, FiMapPin, FiDollarSign, FiImage, FiCheck, FiPlus, FiX, FiUpload
 } from "react-icons/fi";
@@ -9,9 +9,12 @@ import "./PostProperty.css";
 
 const PostProperty = () => {
     const navigate = useNavigate();
+    const { id: propertyId } = useParams();
+    const isEditMode = Boolean(propertyId);
     const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [loadingProperty, setLoadingProperty] = useState(isEditMode);
     const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
@@ -61,6 +64,56 @@ const PostProperty = () => {
         // Images (URLs for now, will add file upload later)
         images: [],
     });
+
+    // Pre-fill form when editing an existing property
+    useEffect(() => {
+        if (!isEditMode) return;
+        (async () => {
+            try {
+                const data = await propertyService.getProperty(propertyId);
+                const p = data.property || data;
+                setFormData({
+                    title: p.title || "",
+                    description: p.description || "",
+                    listingType: p.listingType || "buy",
+                    propertyType: p.propertyType || "apartment",
+                    location: {
+                        address: p.location?.address || "",
+                        city: p.location?.city || "",
+                        state: p.location?.state || "",
+                        pincode: p.location?.pincode || "",
+                        landmark: p.location?.landmark || "",
+                    },
+                    specifications: {
+                        bedrooms: p.specifications?.bedrooms ?? "",
+                        bathrooms: p.specifications?.bathrooms ?? "",
+                        carpetArea: p.specifications?.carpetArea ?? "",
+                        builtUpArea: p.specifications?.builtUpArea ?? "",
+                        floorNumber: p.specifications?.floorNumber ?? "",
+                        totalFloors: p.specifications?.totalFloors ?? "",
+                        balconies: p.specifications?.balconies ?? "",
+                        furnishing: p.specifications?.furnishing || "",
+                        facing: p.specifications?.facing || "",
+                        ageOfProperty: p.specifications?.ageOfProperty ?? "",
+                        possessionStatus: p.specifications?.possessionStatus || "ready-to-move",
+                    },
+                    price: p.price || "",
+                    priceBreakdown: {
+                        maintenanceCharges: p.priceBreakdown?.maintenanceCharges || "",
+                        negotiable: p.priceBreakdown?.negotiable || false,
+                    },
+                    amenities: p.amenities || [],
+                    highlights: p.highlights || [],
+                    // Map server images to the local format (no file object — these are existing)
+                    images: (p.images || []).map(img => ({ url: img.url, isPrimary: img.isPrimary || false, file: null })),
+                });
+            } catch (err) {
+                setErrors({ submit: "Failed to load property data. Please try again." });
+            } finally {
+                setLoadingProperty(false);
+            }
+        })();
+    }, [isEditMode, propertyId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const propertyTypes = [
         { value: "apartment", label: "Apartment" },
@@ -275,60 +328,57 @@ const PostProperty = () => {
                 cleanedSpecifications.possessionStatus = formData.specifications.possessionStatus;
             }
 
-            // Check if any images have file objects
-            const hasFileUploads = formData.images.some(img => img.file instanceof File);
+            // Check if any images have new file objects
+            const hasNewFiles = formData.images.some(img => img.file instanceof File);
 
-            if (hasFileUploads) {
-                // Use FormData for file uploads
+            // Existing images (loaded from server, no File object)
+            const existingImages = formData.images
+                .filter(img => !(img.file instanceof File))
+                .map(({ url, isPrimary }) => ({ url, isPrimary }));
+
+            if (hasNewFiles || isEditMode) {
+                // Use FormData so we can send new files + preserve existing images
                 const formDataObj = new FormData();
-                
-                // Add basic fields
+
                 formDataObj.append('title', formData.title);
                 formDataObj.append('description', formData.description);
                 formDataObj.append('listingType', formData.listingType);
                 formDataObj.append('propertyType', formData.propertyType);
                 formDataObj.append('price', Number(formData.price));
-                formDataObj.append('owner', user._id);
-                
-                // Add location
+                if (!isEditMode) formDataObj.append('owner', user._id);
+
                 formDataObj.append('location', JSON.stringify(formData.location));
-                
-                // Add specifications
                 formDataObj.append('specifications', JSON.stringify(cleanedSpecifications));
-                
-                // Add amenities
                 formDataObj.append('amenities', JSON.stringify(formData.amenities));
-                
-                // Add highlights
                 formDataObj.append('highlights', JSON.stringify(formData.highlights));
-                
-                // Add price breakdown
                 formDataObj.append('priceBreakdown', JSON.stringify({
                     maintenanceCharges: Number(formData.priceBreakdown.maintenanceCharges) || 0,
                 }));
-                
-                // Add image files
+
+                // Send existing image URLs so server can preserve them
+                formDataObj.append('existingImages', JSON.stringify(existingImages));
+
+                // Append any new file uploads
                 formData.images.forEach((img) => {
                     if (img.file instanceof File) {
                         formDataObj.append('images', img.file);
                     }
                 });
-                
-                // Add metadata for primary image
+
                 const primaryIndex = formData.images.findIndex(img => img.isPrimary);
                 formDataObj.append('primaryImageIndex', primaryIndex >= 0 ? primaryIndex : 0);
-                
-                console.log("Submitting property with file uploads");
-                
-                // Make direct API call with FormData
+
                 const api = (await import('../services/api')).default;
-                await api.post('/properties', formDataObj, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                if (isEditMode) {
+                    await api.put(`/properties/${propertyId}`, formDataObj, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                } else {
+                    await api.post('/properties', formDataObj, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                }
             } else {
-                // Original JSON submission (no file uploads)
                 const propertyData = {
                     title: formData.title,
                     description: formData.description,
@@ -339,28 +389,31 @@ const PostProperty = () => {
                     specifications: cleanedSpecifications,
                     amenities: formData.amenities,
                     highlights: formData.highlights,
-                    images: formData.images.length > 0 ? formData.images : [{ url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23e5e7eb' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='%239ca3af' text-anchor='middle' dominant-baseline='middle'%3ENo Image%3C/text%3E%3C/svg%3E", isPrimary: true }],
+                    images: formData.images.length > 0
+                        ? formData.images.map(({ url, isPrimary }) => ({ url, isPrimary }))
+                        : [{ url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23e5e7eb' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='%239ca3af' text-anchor='middle' dominant-baseline='middle'%3ENo Image%3C/text%3E%3C/svg%3E", isPrimary: true }],
                     priceBreakdown: {
                         maintenanceCharges: Number(formData.priceBreakdown.maintenanceCharges) || 0,
                     },
-                    owner: user._id,
+                    ...(!isEditMode && { owner: user._id }),
                 };
 
-                console.log("Submitting property data:", propertyData);
-
-                await propertyService.createProperty(propertyData);
+                if (isEditMode) {
+                    await propertyService.updateProperty(propertyId, propertyData);
+                } else {
+                    await propertyService.createProperty(propertyData);
+                }
             }
 
             navigate("/seller/dashboard");
         } catch (error) {
-            console.error("Error creating property:", error);
+            console.error(isEditMode ? "Error updating property:" : "Error creating property:", error);
             console.error("Error response:", error.response?.data);
-            
-            // Display detailed error message
-            const errorMessage = error.response?.data?.details || 
-                                error.response?.data?.message || 
-                                "Failed to create property. Please check all required fields.";
-            
+
+            const errorMessage = error.response?.data?.details ||
+                                 error.response?.data?.message ||
+                                 (isEditMode ? "Failed to update property." : "Failed to create property. Please check all required fields.");
+
             setErrors({ submit: errorMessage });
         } finally {
             setLoading(false);
@@ -396,6 +449,15 @@ const PostProperty = () => {
     const baths = stepSpec("bathrooms", 1, 6);
     const balcs = stepSpec("balconies", 0, 5);
 
+    if (loadingProperty) {
+        return (
+            <div className="loading-screen">
+                <div className="spinner"></div>
+                <p>Loading property…</p>
+            </div>
+        );
+    }
+
     return (
         <div className="pp-root">
             {/* ── Sidebar ── */}
@@ -404,7 +466,7 @@ const PostProperty = () => {
                     <span className="pp-brand-dot" />
                     <span className="pp-brand-name">LogicWave</span>
                 </div>
-                <p className="pp-brand-sub">List your property</p>
+                <p className="pp-brand-sub">{isEditMode ? "Edit your property" : "List your property"}</p>
 
                 <nav className="pp-step-rail">
                     {steps.map((s) => (
@@ -894,7 +956,7 @@ const PostProperty = () => {
                             <button type="button" className="pp-btn-next" onClick={handleNext}>Continue</button>
                         ) : (
                             <button type="button" className="pp-btn-submit" onClick={handleSubmit} disabled={loading}>
-                                {loading ? "Publishing…" : "Publish Property"}
+                                {loading ? (isEditMode ? "Saving…" : "Publishing…") : (isEditMode ? "Save Changes" : "Publish Property")}
                             </button>
                         )}
                     </div>

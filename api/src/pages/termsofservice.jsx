@@ -9,7 +9,7 @@ const TermsOfService = () => {
                 <div className="legal-hero-content">
                     <FiShield className="legal-icon" />
                     <h1>Terms of Service</h1>
-                    <p className="legal-subtitle">Last Updated: February 4, 2026</p>
+                    <p className="legal-subtitle">Last Updated: Jan 19, 2026</p>
                 </div>
             </div>
 

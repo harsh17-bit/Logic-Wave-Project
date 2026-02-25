@@ -243,7 +243,7 @@
     text-align: center;
     font-weight: 600;
     transition: all 0.3s;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    
 }
 
 
@@ -260,7 +260,7 @@
 }
 
 .legal-links a {
-    color: #3b82f6;
+    
     text-decoration: none;
     font-size: 0.875rem;
     transition: all 0.2s;

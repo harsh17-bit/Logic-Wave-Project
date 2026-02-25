@@ -3,6 +3,14 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 
+// Fail fast if required env vars are missing
+const REQUIRED_ENV = ["MONGODB_URI", "JWT_SECRET"];
+const missing = REQUIRED_ENV.filter((k) => !process.env[k]);
+if (missing.length) {
+  console.error(`Missing required environment variables: ${missing.join(", ")}`);
+  process.exit(1);
+}
+
 const connectDB = require("./config/db");
 
 // Import routes

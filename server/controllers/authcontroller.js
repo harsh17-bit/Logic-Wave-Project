@@ -61,7 +61,7 @@ const path = require("path");
  * @returns {string} Signed JWT token
  */
 const generateToken = (userId) => {
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET || "your-secret-key", {
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE || "7d",
     });
 };

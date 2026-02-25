@@ -309,7 +309,7 @@ const UserDashboard = () => {
                                                 </select>
                                             ) : (
                                                 <p>
-                                                    {user?.role === "seller"
+                                                    {user?.role === "seller" | "buyer"
                                                         ? "Sell / List Property"
                                                         : "Buy / Rent Property"}
                                                 </p>

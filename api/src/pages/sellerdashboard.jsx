@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
     FiHome, FiPlus, FiMessageSquare, FiBarChart2, FiSettings,
-    FiEdit2, FiTrash2, FiEye, FiTrendingUp, FiUsers, FiDollarSign, FiCheck, FiX, FiStar
+    FiEdit2, FiTrash2, FiEye, FiTrendingUp, FiUsers, FiDollarSign, FiCheck, FiX, FiStar,
+    FiMail,
+    FiPhone,
+    FiUser
 } from "react-icons/fi";
 import FeaturedUpgradeModal from "../components/FeaturedUpgradeModal.jsx";
 import { useAuth } from "../context/authcontext.jsx";
@@ -12,7 +15,7 @@ import { getImageUrl } from "../utils/imageUtils";
 import "./Dashboard.css";
 
 const SellerDashboard = () => {
-    const { user } = useAuth();
+    const { user, updateProfile } = useAuth();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("overview");
     const [properties, setProperties] = useState([]);
@@ -24,11 +27,25 @@ const SellerDashboard = () => {
     const [actionLoading, setActionLoading] = useState(false);
     const [inquiryError, setInquiryError] = useState(null);
     const [featuredProperty, setFeaturedProperty] = useState(null);
-
+    const [editMode, setEditMode] = useState(false);
+    const [profileData, setProfileData] = useState({
+        name: user?.name || "",
+        phone: user?.phone || "",
+        bio: user?.bio || "",
+        role: user?.role || "user",
+    });
     useEffect(() => {
         fetchData();
     }, []);
-
+const handleProfileUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            await updateProfile(profileData);
+            setEditMode(false);
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
+    };
     const handleFeatureSuccess = (updatedProp) => {
         setProperties((prev) =>
             prev.map((p) => (p._id === updatedProp._id ? { ...p, ...updatedProp } : p))
@@ -126,6 +143,7 @@ const SellerDashboard = () => {
         { id: "properties", label: "My Properties", icon: FiHome },
         { id: "inquiries", label: "Inquiries", icon: FiMessageSquare },
         { id: "analytics", label: "Analytics", icon: FiTrendingUp },
+        { id: "profile",    label: "Profile",    icon: FiUser },
     ];
 
     return (
@@ -342,7 +360,7 @@ const SellerDashboard = () => {
                                     <h1>My Properties</h1>
                                     <p className="subtitle">Manage all your property listings</p>
                                 </div>
-                                <button className="btn-primary" onClick={() => navigate("/post-property")}>
+                                <button  onClick={() => navigate("/post-property")}>
                                     <FiPlus /> Add Property
                                 </button>
                             </div>
@@ -530,49 +548,156 @@ const SellerDashboard = () => {
                             </div>
                         </div>
                     )}
+                    {/* Profile Tab */}
+                    {activeTab === "profile" && (
+                        <div className="dashboard-content">
+                            <div className="section-header">
+                                <div>
+                                    <h1>Profile Settings</h1>
+                                    <p className="subtitle">Manage your account information</p>
+                                </div>
+                                <button
+                                    className={`btn-outline ${editMode ? "cancel" : ""}`}
+                                    onClick={() => setEditMode(!editMode)}
+                                >
+                                    {editMode ? "Cancel" : <><FiEdit2 /> Edit Profile</>}
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleProfileUpdate} className="profile-form">
+                                <div className="profile-section">
+                                    <div className="profile-avatar-section">
+                                        <div className="large-avatar">
+                                            {user?.avatar ? (
+                                                <img src={user.avatar} alt={user.name} />
+                                            ) : (
+                                                <span>{user?.name?.charAt(0)?.toUpperCase()}</span>
+                                            )}
+                                        </div>
+                                        {editMode && (
+                                            <button type="button" className="btn-outline small">
+                                                Change Photo
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="profile-fields">
+                                        <div className="form-group">
+                                            <label><FiUser /> Full Name</label>
+                                            {editMode ? (
+                                                <input
+                                                    type="text"
+                                                    value={profileData.name}
+                                                    onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                                                />
+                                            ) : (
+                                                <p>{user?.name}</p>
+                                            )}
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label><FiMail /> Email</label>
+                                            <p>{user?.email}</p>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label><FiPhone /> Phone</label>
+                                            {editMode ? (
+                                                <input
+                                                    type="tel"
+                                                    value={profileData.phone}
+                                                    onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                                />
+                                            ) : (
+                                                <p>{user?.phone || "Not provided"}</p>
+                                            )}
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label><FiHome /> You want to</label>
+                                            {editMode ? (
+                                                <select
+                                                    value={profileData.role}
+                                                    onChange={(e) => setProfileData({ ...profileData, role: e.target.value })}
+                                                >
+                                                    <option value="user">Buy / Rent Property</option>
+                                                    <option value="seller">Sell / List Property</option>
+                                                </select>
+                                            ) : (
+                                                <p>
+                                                    {user?.role === "seller" | "buyer"
+                                                        ? "Sell / List Property"
+                                                        : "Buy / Rent Property"}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="form-group full-width">
+                                            <label>Bio</label>
+                                            {editMode ? (
+                                                <textarea
+                                                    value={profileData.bio}
+                                                    onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                                                    rows={3}
+                                                    placeholder="Tell us about yourself..."
+                                                />
+                                            ) : (
+                                                <p>{user?.bio || "No bio added"}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {editMode && (
+                                    <button type="submit" className="btn-primary">
+                                        Save Changes
+                                    </button>
+                                )}
+                            </form>
+                        </div>
+                    )}
                 </main>
-            </div >
+            </div>
 
             {/* Response Modal */}
-            {
-                respondingTo && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h3>Respond to Inquiry</h3>
-                                <button className="btn-icon" onClick={() => setRespondingTo(null)}><FiX /></button>
+            {respondingTo && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h3>Respond to Inquiry</h3>
+                            <button className="btn-icon" onClick={() => setRespondingTo(null)}><FiX /></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="inquiry-summary">
+                                <p><strong>Property:</strong> {respondingTo.property?.title}</p>
+                                <p><strong>From:</strong> {respondingTo.sender?.name}</p>
+                                <p><strong>Message:</strong> "{respondingTo.message}"</p>
                             </div>
-                            <div className="modal-body">
-                                <div className="inquiry-summary">
-                                    <p><strong>Property:</strong> {respondingTo.property?.title}</p>
-                                    <p><strong>From:</strong> {respondingTo.sender?.name}</p>
-                                    <p><strong>Message:</strong> "{respondingTo.message}"</p>
+                            <form onSubmit={handleSendReply}>
+                                <div className="form-group">
+                                    <label>Your Reply</label>
+                                    <textarea
+                                        value={replyMessage}
+                                        onChange={(e) => setReplyMessage(e.target.value)}
+                                        placeholder="Type your response here..."
+                                        rows="4"
+                                        required
+                                        className="form-input"
+                                    ></textarea>
                                 </div>
-                                <form onSubmit={handleSendReply}>
-                                    <div className="form-group">
-                                        <label>Your Reply</label>
-                                        <textarea
-                                            value={replyMessage}
-                                            onChange={(e) => setReplyMessage(e.target.value)}
-                                            placeholder="Type your response here..."
-                                            rows="4"
-                                            required
-                                            className="form-input"
-                                        ></textarea>
-                                    </div>
-                                    <div className="modal-actions">
-                                        <button type="button" className="btn-outline" onClick={() => setRespondingTo(null)}>Cancel</button>
-                                        <button type="submit" className="btn-primary" disabled={actionLoading}>
-                                            {actionLoading ? "Sending..." : "Send Reply"}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                                <div className="modal-actions">
+                                    <button type="button" className="btn-outline" onClick={() => setRespondingTo(null)}>Cancel</button>
+                                    <button type="submit" className="btn-primary" disabled={actionLoading}>
+                                        {actionLoading ? "Sending..." : "Send Reply"}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                )
-            }
+                </div>
+            )}
 
+            {/* Featured Property Modal */}
             {featuredProperty && (
                 <FeaturedUpgradeModal
                     property={featuredProperty}
@@ -583,7 +708,8 @@ const SellerDashboard = () => {
                     }}
                 />
             )}
-            </div>
+        </div>
     );
 };
+
 export default SellerDashboard;

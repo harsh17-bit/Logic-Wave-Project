@@ -5,40 +5,15 @@
 /* Main Footer Container */
 footer {
   position: relative;
-  background: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
-  color: #d1d5db;
-  margin-top: 5rem;
-  overflow: hidden;
+  background: #f8fafc;
+  color: #475569;
+  margin-top: 3rem;
+  border-top: 1px solid #e2e8f0;
 }
 
 /* Decorative Background Elements */
 .footer-decorative-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.footer-decorative-bg .blur-circle-top {
-  position: absolute;
-  top: -10rem;
-  right: -10rem;
-  width: 20rem;
-  height: 20rem;
-  background-color: rgba(var(--color-primary-rgb), 0.08);
-  border-radius: 9999px;
-  filter: blur(64px);
-}
-
-.footer-decorative-bg .blur-circle-bottom {
-  position: absolute;
-  bottom: -10rem;
-  left: -10rem;
-  width: 20rem;
-  height: 20rem;
-  background-color: rgba(var(--color-accent-rgb), 0.08);
-  border-radius: 9999px;
-  filter: blur(64px);
+  display: none;
 }
 
 /* Footer Content Container */
@@ -95,17 +70,17 @@ footer {
 }
 
 .footer-brand h2 {
-  font-size: 1.875rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: var(--color-primary);
-  margin-bottom: 1.25rem;
+  color: var(--color-primary, #2563eb);
+  margin-bottom: 0.75rem;
 }
 
 .footer-brand p {
-  color: #9ca3af;
+  color: #64748b;
   font-size: 0.875rem;
-  line-height: 1.625;
-  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
 }
 
 /* Social Links */
@@ -116,24 +91,23 @@ footer {
 }
 
 .footer-social-link {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #9ca3af;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  transition: all 0.2s;
   text-decoration: none;
 }
 
 .footer-social-link:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
+  background: var(--color-primary, #2563eb);
+  color: white;
   border-color: transparent;
-  transform: scale(1.1);
 }
 
 .footer-social-link svg {
@@ -143,22 +117,12 @@ footer {
 
 /* Footer Section Headers */
 .footer-section-title {
-  color: #ffffff;
+  color: #1e293b;
   font-weight: 600;
-  font-size: 1.125rem;
-  margin-bottom: 1.25rem;
-  position: relative;
-}
-
-.footer-section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -0.25rem;
-  left: 0;
-  width: 2rem;
-  height: 0.125rem;
-  background-color: var(--color-accent);
-  border-radius: 9999px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
 }
 
 /* Footer Links Lists */
@@ -176,43 +140,17 @@ footer {
 }
 
 .footer-link {
-  color: #9ca3af;
+  color: #64748b;
   font-size: 0.875rem;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-.footer-link::before {
-  content: '';
-  width: 0;
-  height: 0.125rem;
-  background-color: var(--color-accent);
-  border-radius: 9999px;
-  transition: width 0.3s ease;
+  gap: 0.4rem;
+  transition: color 0.2s;
 }
 
 .footer-link:hover {
-  color: var(--color-accent);
-}
-
-.footer-link:hover::before {
-  width: 0.5rem;
-}
-
-/* Services Links - Emerald Color Variant */
-.footer-link.services::before {
-  background-color: var(--emerald);
-}
-
-.footer-link.services:hover {
-  color: var(--emerald);
-}
-
-.footer-link.services:hover::before {
-  background-color: var(--emerald);
+  color: var(--color-primary, #2563eb);
 }
 
 /* Contact Info */
@@ -233,32 +171,32 @@ footer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #9ca3af;
+  color: #64748b;
   font-size: 0.875rem;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.2s;
 }
 
 .footer-contact-link:hover {
-  color: var(--color-accent);
+  color: var(--color-primary, #2563eb);
 }
 
 .footer-contact-icon {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
   flex-shrink: 0;
 }
 
 .footer-contact-link:hover .footer-contact-icon {
-  background-color: rgba(var(--color-primary-rgb), 0.15);
-  border-color: rgba(var(--color-primary-rgb), 0.25);
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .footer-contact-icon svg {
@@ -271,7 +209,7 @@ footer {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  color: #9ca3af;
+  color: #64748b;
   font-size: 0.875rem;
 }
 
@@ -287,12 +225,12 @@ footer {
 .footer-certifications {
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #e2e8f0;
 }
 
 .footer-certifications-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: #64748b;
   margin-bottom: 0.5rem;
 }
 
@@ -304,18 +242,18 @@ footer {
 
 .footer-badge {
   padding: 0.25rem 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: #64748b;
 }
 
 /* Footer Bottom Bar */
 .footer-bottom {
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #e2e8f0;
 }
 
 .footer-bottom-content {
@@ -345,7 +283,7 @@ footer {
 }
 
 .footer-copyright span {
-  color: #9ca3af;
+  color: #64748b;
 }
 
 /* Footer Legal Links */
@@ -363,7 +301,7 @@ footer {
 }
 
 .footer-legal-link:hover {
-  color: var(--color-accent);
+  color: var(--color-primary, #2563eb);
 }
 
 /* Responsive Adjustments */
@@ -381,11 +319,3 @@ footer {
   }
 }
 
-/* CSS Variables Support (if not defined elsewhere) */
-:root {
-  --color-primary: #3b82f6;
-  --color-primary-rgb: 59, 130, 246;
-  --color-accent: #f59e0b;
-  --color-accent-rgb: 245, 158, 11;
-  --emerald: #10b981;
-}

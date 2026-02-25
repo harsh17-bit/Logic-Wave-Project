@@ -19,7 +19,7 @@ exports.protect = async (req, res, next) => {
         }
 
         // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "3TktVLeU5tgYG43N2sWYPWzfFHvcWp65F9t9w7WxDfh");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Get user from token
         req.user = await User.findById(decoded.id);
@@ -62,7 +62,7 @@ exports.optionalAuth = async (req, res, next) => {
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
             token = req.headers.authorization.split(" ")[1];
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || "3TktVLeU5tgYG43N2sWYPWzfFHvcWp65F9t9w7WxDfh");
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.id);
         }
 

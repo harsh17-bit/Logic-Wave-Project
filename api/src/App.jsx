@@ -27,6 +27,7 @@ import UserDashboard from "./pages/userdashboard.jsx"
 import SellerDashboard from "./pages/sellerdashboard.jsx"
 import AdminDashboard from "./pages/admindashboard.jsx"
 import PostProperty from "./pages/postproperty.jsx"
+import EditProperty from "./pages/postproperty.jsx"
 import TermsOfService from "./pages/termsofservice.jsx"
 import PrivacyPolicy from "./pages/privacypolicy.jsx"
 import FAQ from "./pages/faq.jsx"
@@ -131,6 +132,14 @@ function AppContent() {
 
           {/* Protected Routes */}
           <Route
+            path="/edit-property/:id"
+            element={
+              <ProtectedRoute allowedRoles={['seller', 'admin']}>
+                <EditProperty />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/inquiry/:id"
             element={
               <ProtectedRoute>
@@ -184,18 +193,7 @@ function AppContent() {
         </Routes>
       </AnimatePresence>
       </main>
-      
-      {/* Floating Action Button (Step 8) */}
-      <a 
-        href="/post-property"
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-[var(--emerald)] to-[var(--pacific-cyan)] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform z-50"
-        title="Post Property"
-      >
-        <span className="text-2xl">+</span>
-      </a>
-      
       <Footer />
-      <CookieConsentBanner />
       </div>
   </>
 )
@@ -203,11 +201,13 @@ function AppContent() {
 
 function App() {
   return (
+
     <BrowserRouter>
       <AuthProvider>  
         <AppContent />
       </AuthProvider>
     </BrowserRouter>
+
   );
 }
 

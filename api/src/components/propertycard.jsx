@@ -133,10 +133,11 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
 
   return (
     <Wrapper {...wrapperProps} className="property-card">
+      {/* Image */}
       <div className="property-image-wrap">
-        <img 
-          src={image} 
-          alt={title} 
+        <img
+          src={image}
+          alt={title}
           className="property-image"
           onError={(e) => {
             e.target.onerror = null;
@@ -144,8 +145,9 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
           }}
           loading="lazy"
         />
-       
-        <span className="listing-type-badge">{listingType === "rent" ? "For Rent" : "For Sale"}</span>
+        <span className="listing-type-badge">
+          {listingType === "rent" ? "For Rent" : "For Sale"}
+        </span>
         {isUnavailable && (
           <div className="sold-overlay">
             <span>{isSold ? "SOLD" : "RENTED"}</span>
@@ -162,6 +164,7 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
         )}
       </div>
 
+      {/* Body */}
       <div className="property-body">
         <span className="property-type-tag">{propertyType}</span>
         <h3 className="property-title">{title}</h3>
@@ -170,10 +173,20 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
           {cityName}
         </p>
 
-        <div className="property-meta">
-          {bhk > 0 && <span><FiHome /> {bhk} BHK</span>}
-          {area > 0 && <span><FiMaximize /> {area} sq.ft</span>}
-        </div>
+        {(bhk > 0 || area > 0) && (
+          <div className="property-meta">
+            {bhk > 0 && (
+              <span>
+                <FiHome /> {bhk} BHK
+              </span>
+            )}
+            {area > 0 && (
+              <span>
+                <FiMaximize /> {area} sq.ft
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="property-footer">
           <p className="property-price">{formatPrice(price, listingType)}</p>
