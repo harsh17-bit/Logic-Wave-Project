@@ -50,8 +50,8 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Static files for uploads
-app.use(express.static(path.join(__dirname, "/api/dist")));
+// Static files for frontend
+app.use(express.static(path.join(__dirname, "..", "api", "dist")));
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -87,7 +87,7 @@ app.get("/api", (req, res) => {
 
 // SPA catch-all - serve index.html for client-side routing (must be after API routes)
 app.get("{*path}", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "api", "dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "..", "api", "dist", "index.html"));
 });
 
 // Error handling middleware
