@@ -4,6 +4,13 @@ const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
 
+// Ensure uploads directory exists (needed on Render where the folder isn't in git)
+const uploadsDir = path.join(__dirname, "uploads", "propertyimages");
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log("Created uploads directory:", uploadsDir);
+}
+
 // Fail fast if required env vars are missing
 const REQUIRED_ENV = ["MONGODB_URI", "JWT_SECRET"];
 const missing = REQUIRED_ENV.filter((k) => !process.env[k]);
@@ -52,6 +59,9 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Static files for frontend
 app.use(express.static(path.join(__dirname, "..", "api", "dist")));
+
+// Static files for uploaded images
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // API Routes
 app.use("/api/auth", authRoutes);
