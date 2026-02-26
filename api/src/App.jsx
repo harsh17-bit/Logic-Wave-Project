@@ -37,6 +37,7 @@ import Projects from "./pages/projects.jsx"
 import InquiryDetails from "./pages/InquiryDetails.jsx"
 import AboutUs from "./pages/AboutUs.jsx"
 import EMICalculator from "./pages/EMICalculator.jsx"
+import ModernCardDemo from "./pages/ModernCardDemo.jsx"
 
 
 // Home Page Component with all sections
@@ -130,6 +131,7 @@ function AppContent() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/emi-calculator" element={<EMICalculator />} />
+              <Route path="/modern-card-demo" element={<ModernCardDemo />} />
 
               {/* Protected Routes */}
               <Route
