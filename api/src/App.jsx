@@ -131,7 +131,7 @@ function AppContent() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/emi-calculator" element={<EMICalculator />} />
-              <Route path="/modern-card-demo" element={<ModernCardDemo />} />
+
 
               {/* Protected Routes */}
               <Route
