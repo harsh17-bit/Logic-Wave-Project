@@ -37,7 +37,7 @@ import Projects from "./pages/projects.jsx"
 import InquiryDetails from "./pages/InquiryDetails.jsx"
 import AboutUs from "./pages/AboutUs.jsx"
 import EMICalculator from "./pages/EMICalculator.jsx"
-import ModernCardDemo from "./pages/ModernCardDemo.jsx"
+
 
 
 // Home Page Component with all sections
