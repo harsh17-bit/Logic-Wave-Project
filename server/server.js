@@ -67,8 +67,8 @@ app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
 });
 
-// Root info
-app.get("/", (req, res) => {
+// API info
+app.get("/api", (req, res) => {
     res.json({
         success: true,
         message: "Real Estate Backend API is running",
