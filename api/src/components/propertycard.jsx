@@ -35,7 +35,8 @@ const PropertyCard = ({ property, viewMode = "grid" }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!isAuthenticated) {
-      navigate("/login");
+      alert("Please Register or Login to manage Favourites.");
+      navigate("/register");
       return;
     }
     try {

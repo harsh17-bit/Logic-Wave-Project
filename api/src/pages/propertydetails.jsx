@@ -49,7 +49,7 @@ const PropertyDetails = () => {
   const [showRentalAgreement, setShowRentalAgreement] = useState(false);
   const [showBuyerAgreement, setShowBuyerAgreement] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [userHasReviewed, setUserHasReviewed] = useState(false);
+  const [ userHasReviewed, setUserHasReviewed] = useState(false);
   const [reviewData, setReviewData] = useState({
     rating: 5,
     title: "",
@@ -73,10 +73,10 @@ const PropertyDetails = () => {
       setLoading(false);
       return;
     }
-    
-    const fetchProperty = async() => {
+
+    async function fetchProperty() {
       setLoading(true);
-      try{
+      try {
         const data = await propertyService.getProperty(id);
         setProperty(data?.property || data);
         setIsFavorite(user?.favorites?.includes(id));
@@ -94,8 +94,8 @@ const PropertyDetails = () => {
           const hasReviewed = reviewsRes.reviews?.some(r => r.user?._id === user._id);
           setUserHasReviewed(hasReviewed);
         }
-      }catch(err){
-        console.log("error fetching property:",err);
+      } catch (err) {
+        console.log("error fetching property:", err);
       } finally {
         setLoading(false);
       }
@@ -119,6 +119,7 @@ const PropertyDetails = () => {
   const handleFavoriteToggle = async () => {
     if (!isAuthenticated) {
       // Redirect to login
+      alert("Please login to manage your favorites.");
       return;
     }
     try {
@@ -136,7 +137,6 @@ const PropertyDetails = () => {
         propertyId: id,
         ...inquiryData,
       });
-
       setShowInquiryForm(false);
       setInquiryData({ message: "", phone: "", inquiryType: "general" });
       alert("Inquiry sent successfully!");
@@ -165,7 +165,7 @@ const PropertyDetails = () => {
     if (price >= 10000000) {
       return `₹${(price / 10000000).toFixed(2)} Cr`;
     } else if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(2)} Lac`;
+      return `₹${(price / 100000).toFixed(2)} Lakh`;
     }
     return `₹${price?.toLocaleString()}`;
   };
@@ -786,12 +786,12 @@ const PropertyDetails = () => {
                 </div>
               ) : (
                 <>
-                  {(property.listingType === "rent" || property.listingType === "pg") && (
-                    <button
-                      
-                      
-                      onClick={() => {
-                        if (!isAuthenticated) { Navigate("/login"); return; }
+                  {(property.listingType === "rent") && (
+                    <button   
+                    onClick={() => {
+                        if (!isAuthenticated) {
+                            alert("Please login to view the rental agreement");
+                          Navigate("/login"); return; }
                         setShowRentalAgreement(true);
                       }}
                     >
@@ -803,7 +803,9 @@ const PropertyDetails = () => {
                       className="btn-primary"
    
                       onClick={() => {
-                        if (!isAuthenticated) { Navigate("/login"); return; }
+                        if (!isAuthenticated) {
+                          alert("Please login to view the buyer agreement");
+                          Navigate("/login"); return; }
                         setShowBuyerAgreement(true);
                       }}
                     >
@@ -812,6 +814,7 @@ const PropertyDetails = () => {
                   )}
                   <button className="btn-primary" onClick={() => {
                     if (!isAuthenticated) {
+                      alert("Please login to contact the owner");
                       Navigate("/login");
                       return;
                     }

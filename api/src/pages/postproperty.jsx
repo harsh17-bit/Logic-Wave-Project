@@ -107,7 +107,7 @@ const PostProperty = () => {
                     // Map server images to the local format (no file object — these are existing)
                     images: (p.images || []).map(img => ({ url: img.url, isPrimary: img.isPrimary || false, file: null })),
                 });
-            } catch (err) {
+            } catch{
                 setErrors({ submit: "Failed to load property data. Please try again." });
             } finally {
                 setLoadingProperty(false);
@@ -295,7 +295,7 @@ const PostProperty = () => {
     };
 
     const handleSubmit = async () => {
-        if (!validateStep(4)) return;
+        if (!validateStep(2)) return;
 
         setLoading(true);
         try {
