@@ -1,40 +1,86 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {
-  FiShield, FiTrendingUp, FiHeart, FiTarget, FiZap,
-  FiMapPin, FiPhone, FiMail, FiCheckCircle,
-} from "react-icons/fi";
-import "./AboutUs.css";
+  FiShield,
+  FiTrendingUp,
+  FiHeart,
+  FiTarget,
+  FiZap,
+  FiMapPin,
+  FiPhone,
+  FiMail,
+  FiCheckCircle,
+} from 'react-icons/fi';
+import './AboutUs.css';
 
 /* ─────────────────── data ─────────────────── */
 
 const VALUES = [
-  { icon: FiShield,  title: "Trust & Transparency", desc: "Every property is verified. We believe honest information builds lasting relationships." },
-  { icon: FiTarget,  title: "Customer First",        desc: "Your dream matters most. We work to match you with the perfect property." },
-  { icon: FiZap,     title: "Innovation",            desc: "We use modern technology to make your property search faster and smarter." },
-  { icon: FiHeart,   title: "Community",             desc: "We don't just sell homes — we help build thriving neighbourhoods across India." },
-  { icon: FiTrendingUp, title: "Growth",             desc: "Continuously expanding our reach to serve more cities and more families every year." },
+  {
+    icon: FiShield,
+    title: 'Trust & Transparency',
+    desc: 'Every property is verified. We believe honest information builds lasting relationships.',
+  },
+  {
+    icon: FiTarget,
+    title: 'Customer First',
+    desc: 'Your dream matters most. We work to match you with the perfect property.',
+  },
+  {
+    icon: FiZap,
+    title: 'Innovation',
+    desc: 'We use modern technology to make your property search faster and smarter.',
+  },
+  {
+    icon: FiHeart,
+    title: 'Community',
+    desc: "We don't just sell homes — we help build thriving neighbourhoods across India.",
+  },
+  {
+    icon: FiTrendingUp,
+    title: 'Growth',
+    desc: 'Continuously expanding our reach to serve more cities and more families every year.',
+  },
 ];
 
 const TEAM = [
-  { name: "Arjun Mehta",   role: "Founder & CEO",            initials: "AM", bio: "15 years in real estate, passionate about making home ownership accessible to every family." },
-  { name: "Priya Sharma",  role: "Chief Technology Officer", initials: "PS", bio: "Built UrbanStay's property matching platform from the ground up." },
-  { name: "Ravi Kumar",    role: "Head of Operations",       initials: "RK", bio: "Ensures every listing is verified and every customer experience is smooth." },
-  { name: "Sneha Patel",   role: "Head of Customer Success", initials: "SP", bio: "Makes sure that buying a home is exciting, not stressful." },
+  {
+    name: 'Arjun Mehta',
+    role: 'Founder & CEO',
+    initials: 'AM',
+    bio: '15 years in real estate, passionate about making home ownership accessible to every family.',
+  },
+  {
+    name: 'Priya Sharma',
+    role: 'Chief Technology Officer',
+    initials: 'PS',
+    bio: "Built UrbanStay's property matching platform from the ground up.",
+  },
+  {
+    name: 'Ravi Kumar',
+    role: 'Head of Operations',
+    initials: 'RK',
+    bio: 'Ensures every listing is verified and every customer experience is smooth.',
+  },
+  {
+    name: 'Sneha Patel',
+    role: 'Head of Customer Success',
+    initials: 'SP',
+    bio: 'Makes sure that buying a home is exciting, not stressful.',
+  },
 ];
 
 const WHY_US = [
-  "10,000+ new properties added every day",
-  "Physical verification of photos, videos & documents",
-  "Dedicated relationship managers for premium buyers",
-  "Zero brokerage on select listings",
-  "Secure and transparent transactions",
-  "24 × 7 customer support",
+  '10,000+ new properties added every day',
+  'Physical verification of photos, videos & documents',
+  'Dedicated relationship managers for premium buyers',
+  'Zero brokerage on select listings',
+  'Secure and transparent transactions',
+  '24 × 7 customer support',
 ];
 
 const AboutUs = () => {
   return (
     <div className="about-page">
-
       {/* Hero */}
       <section className="about-hero">
         <h1>About UrbanStay</h1>
@@ -43,7 +89,9 @@ const AboutUs = () => {
           perfect home — with verified listings, transparent pricing and a team
           that genuinely cares.
         </p>
-        <Link to="/post-property" className="about-cta-btn">List Your Property</Link>
+        <Link to="/post-property" className="about-cta-btn">
+          List Your Property
+        </Link>
       </section>
 
       {/* Mission & Vision */}
@@ -52,16 +100,17 @@ const AboutUs = () => {
           <div className="about-mv-card">
             <h2>Our Mission</h2>
             <p>
-              To make real estate in India simple, transparent and accessible for
-              every family — whether they are first-time buyers in a tier-2 city
-              or experienced investors in a metro.
+              To make real estate in India simple, transparent and accessible
+              for every family — whether they are first-time buyers in a tier-2
+              city or experienced investors in a metro.
             </p>
           </div>
           <div className="about-mv-card">
             <h2>Our Vision</h2>
             <p>
-              A future where finding, buying or renting a home is straightforward
-              — powered by verified data and a network you can trust.
+              A future where finding, buying or renting a home is
+              straightforward — powered by verified data and a network you can
+              trust.
             </p>
           </div>
         </div>
@@ -148,7 +197,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

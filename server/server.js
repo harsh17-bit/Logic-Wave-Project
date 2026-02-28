@@ -3,7 +3,9 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
-
+//for code compression and faster load times
+const compression = require("compression");
+app.use(compression());
 // Ensure uploads directory exists (needed on Render where the folder isn't in git)
 const uploadsDir = path.join(__dirname, "uploads", "propertyimages");
 if (!fs.existsSync(uploadsDir)) {

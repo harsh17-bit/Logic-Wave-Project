@@ -10,7 +10,7 @@
 
 /* ── Hero ── */
 .about-hero {
-  background: var(--color-primary, #8B4513);
+  background: var(--color-primary, #8b4513);
   color: #fff;
   text-align: center;
   padding: 72px 24px 64px;
@@ -34,7 +34,7 @@
   display: inline-block;
   padding: 11px 28px;
   background: #fff;
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -44,7 +44,7 @@
 
 .about-cta-btn:hover {
   opacity: 0.88;
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
 }
 
 /* ── Sections ── */
@@ -104,7 +104,7 @@
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 12px;
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
 }
 
 .about-mv-card p {
@@ -129,7 +129,7 @@
 }
 
 .about-value-icon {
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
   margin-bottom: 12px;
   display: block;
 }
@@ -168,7 +168,7 @@
 }
 
 .about-why-list li svg {
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -192,7 +192,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--color-primary, #8B4513);
+  background: var(--color-primary, #8b4513);
   color: #fff;
   font-size: 1.1rem;
   font-weight: 700;
@@ -211,7 +211,7 @@
 
 .about-team-role {
   font-size: 0.82rem;
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
   font-weight: 600;
   display: block;
   margin-bottom: 10px;
@@ -244,7 +244,7 @@
 }
 
 .about-contact-item svg {
-  color: var(--color-primary, #8B4513);
+  color: var(--color-primary, #8b4513);
   flex-shrink: 0;
 }
 
@@ -293,4 +293,3 @@
     padding: 44px 20px;
   }
 }
-
