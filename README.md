@@ -1,4 +1,4 @@
-# Logic-Wave — Real Estate Platform
+# Urban Stay — Real Estate Platform
 
 A full-stack real estate platform built with **React + Vite** (frontend) and **Node.js + Express + MongoDB** (backend). It supports property listings, search & filters, inquiries, reviews, saved alerts, and multi-role dashboards for users, sellers, and admins.
 
