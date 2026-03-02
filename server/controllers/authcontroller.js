@@ -497,6 +497,83 @@ exports.updateUserRole = async (req, res) => {
 
 // @desc    Delete user + all associated data (Admin)
 // @route   DELETE /api/auth/users/:id
+// @desc    Check if email exists
+// @route   GET /api/auth/check-email
+// @access  Public
+exports.checkEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required',
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    res.status(200).json({
+      success: true,
+      exists: !!user,
+    });
+  } catch (error) {
+    console.error('Check email error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error checking email',
+    });
+  }
+};
+
+// @desc    Reset password with OTP
+// @route   POST /api/auth/resetpassword
+// @access  Public
+exports.resetPassword = async (req, res) => {
+  try {
+    const parsed = resetPasswordSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        message: parsed.error.errors[0].message,
+      });
+    }
+
+    const { email, otp, newPassword } = parsed.data;
+
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      resetOtp: otp,
+      otpExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired OTP',
+      });
+    }
+
+    user.password = newPassword;
+    user.resetOtp = undefined;
+    user.otpExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successfully',
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error resetting password',
+    });
+  }
+};
+
 // @access  Private/Admin
 exports.deleteUser = async (req, res) => {
   try {
