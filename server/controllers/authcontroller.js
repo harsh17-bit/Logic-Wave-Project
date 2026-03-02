@@ -47,7 +47,7 @@ const Alert = require('../models/alert');
 const Project = require('../models/project');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
