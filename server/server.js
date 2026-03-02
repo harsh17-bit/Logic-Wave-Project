@@ -3,6 +3,15 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
+const compression = require('compression');
+const helmet = require('helmet');
+const morgan = require('morgan');
+//app use compression
+app.use(compression());
+//using helmet for express protection
+app.use(helmet());
+//reduce css for morgan
+app.use(morgan('dev'));
 //for code compression
 // Ensure uploads directory exists (needed on Render where the folder isn't in git)
 const uploadsDir = path.join(__dirname, 'uploads', 'propertyimages');
@@ -39,7 +48,7 @@ const projectRoutes = require('./routes/projectroutes');
 const paymentRoutes = require('./routes/paymentroutes');
 
 const app = express();
-
+app.set('trust proxy', true); // Trust first proxy for secure cookies on platforms like Render
 // Connect to database
 connectDB();
 
