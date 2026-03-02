@@ -340,6 +340,9 @@ exports.updatePassword = async (req, res) => {
 // @access  Public
 exports.forgotPassword = async (req, res) => {
   try {
+    console.log('EMAIL_USER:', process.env.EMAIL_USER);
+    console.log('EMAIL_PASS exists:', process.env.EMAIL_PASS ? 'YES' : 'NO');
+
     const { email } = req.body;
 
     const user = await User.findOne({ email });

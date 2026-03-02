@@ -25,7 +25,6 @@ const ForgotPassword = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="auth-page">
       <div className="auth-container">
