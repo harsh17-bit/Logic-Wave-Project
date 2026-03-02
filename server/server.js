@@ -6,6 +6,7 @@ require('dotenv').config();
 const compression = require('compression');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const app = express();
 //app use compression
 app.use(compression());
 //using helmet for express protection
@@ -47,7 +48,6 @@ const alertRoutes = require('./routes/alertroutes');
 const projectRoutes = require('./routes/projectroutes');
 const paymentRoutes = require('./routes/paymentroutes');
 
-const app = express();
 app.set('trust proxy', true); // Trust first proxy for secure cookies on platforms like Render
 // Connect to database
 connectDB();
