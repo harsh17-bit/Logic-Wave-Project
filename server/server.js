@@ -10,7 +10,19 @@ const app = express();
 //app use compression
 app.use(compression());
 //using helmet for express protection
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'", 'https://api.openweathermap.org'],
+      },
+    },
+  })
+);
 //reduce css for morgan
 app.use(morgan('dev'));
 //for code compression
