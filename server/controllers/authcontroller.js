@@ -356,8 +356,8 @@ exports.forgotPassword = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    user.resetOtp = otp;
-    user.otpExpire = Date.now() + 10 * 60 * 1000;
+    user.otpHash = otp;
+    user.otpExpiresAt = Date.now() + 10 * 60 * 1000;
 
     await user.save();
 
@@ -544,8 +544,8 @@ exports.resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       email: email.toLowerCase(),
-      resetOtp: otp,
-      otpExpire: { $gt: Date.now() },
+      otpHash: otp,
+      otpExpiresAt: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -556,8 +556,8 @@ exports.resetPassword = async (req, res) => {
     }
 
     user.password = newPassword;
-    user.resetOtp = undefined;
-    user.otpExpire = undefined;
+    user.otpHash = undefined;
+    user.otpExpiresAt = undefined;
 
     await user.save();
 
