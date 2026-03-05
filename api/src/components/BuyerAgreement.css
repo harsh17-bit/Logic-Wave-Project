@@ -123,9 +123,6 @@
   padding: 1.5rem;
 }
 
-/* Step Content */
-.ba-step-content {
-}
 .ba-step-heading {
   font-size: 1rem;
   font-weight: 600;
@@ -251,10 +248,6 @@
   padding-left: 1.25rem;
   font-size: 0.75rem;
   color: #555;
-}
-
-/* Preview */
-.ba-preview-content {
 }
 
 .ba-preview-toolbar {
