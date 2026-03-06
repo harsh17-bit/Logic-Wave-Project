@@ -15,8 +15,8 @@ const Header = () => {
     { label: 'Rent', href: '/properties?listingType=rent' },
     { label: 'Sell', href: '/post-property' },
     { label: 'Home Interior', href: '/home-interior' },
-    { label: 'About Us', href: '/about-us' },
-    { label: 'FAQs', href: '/faq' },
+    { label: 'About Us', href: '' },
+    { label: 'FAQs', href: '' },
   ];
 
   const handleLogout = () => {
