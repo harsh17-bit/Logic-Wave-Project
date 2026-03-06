@@ -32,37 +32,6 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-.emi-brand {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-bottom: 32px;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.brand-urban {
-  color: #00a88e;
-}
-
-.brand-loans {
-  color: #d9534f;
-}
-
-.brand-loans::before {
-  content: 'L';
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: #ffc107;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 1rem;
-  margin-right: 1px;
-}
-
 /* ── Input Groups ── */
 .emi-input-group {
   margin-bottom: 24px;
@@ -164,6 +133,7 @@
 }
 
 .emi-rate-input[type='number'] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -777,10 +747,6 @@
 }
 
 @media (max-width: 480px) {
-  .emi-brand {
-    font-size: 1.25rem;
-  }
-
   .brand-loans::before {
     width: 22px;
     height: 22px;

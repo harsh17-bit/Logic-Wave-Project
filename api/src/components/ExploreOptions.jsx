@@ -11,7 +11,6 @@ const OPTIONS = [
     href: 'home-interior',
   },
 ];
-
 const ExploreOptions = () => {
   return (
     <section className="explore-options">

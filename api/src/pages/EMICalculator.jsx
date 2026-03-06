@@ -109,11 +109,6 @@ const EMICalculator = () => {
         <div className="emi-calc-container">
           {/* Left Panel - Inputs */}
           <div className="emi-input-panel">
-            <div className="emi-brand">
-              <span className="brand-urban">Urban</span>
-              <span className="brand-loans">Loans</span>
-            </div>
-
             {/* Loan Amount */}
             <div className="emi-input-group">
               <label className="emi-label">Loan Amount</label>
