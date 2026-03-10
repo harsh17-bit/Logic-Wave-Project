@@ -7,7 +7,6 @@ import { API_URL } from './services/api';
 // Layout Components
 import Header from './components/Header';
 import Footer from './components/footer';
-import CookieConsentBanner from './components/cookieconsentbanner';
 
 // Home Page Sections
 import Hero from './components/hero.jsx';
@@ -46,7 +45,6 @@ const HomePage = () => {
       <ExploreOptions />
       <TopCities />
       <PopularTools />
-
       <FeaturedProjects />
       <TestimonialsSection />
     </>
@@ -128,7 +126,6 @@ function AppContent() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/emi-calculator" element={<EMICalculator />} />
-
               <Route path="/home-interior" element={<HomeInterior />} />
               {/* Protected Routes */}
               <Route

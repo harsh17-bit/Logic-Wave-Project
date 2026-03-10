@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FiUser,
   FiHeart,
@@ -15,26 +15,26 @@ import {
   FiHome,
   FiEye,
   FiTrash2,
-} from "react-icons/fi";
-import { useAuth } from "../context/authcontext.jsx";
-import { inquiryService, alertService } from "../services/dataservice";
-import { getImageUrl } from "../utils/imageUtils";
-import PropertyCard from "../components/propertycard";
-import "./Dashboard.css";
+} from 'react-icons/fi';
+import { useAuth } from '../context/authcontext.jsx';
+import { inquiryService, alertService } from '../services/dataservice';
+import { getImageUrl } from '../utils/imageUtils';
+import PropertyCard from '../components/propertycard';
+import './Dashboard.css';
 
 const UserDashboard = () => {
   const { user, updateProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState('overview');
   // Derive favorites directly from user object — updates instantly when toggleFavorite runs
   const favorites = user?.favorites || [];
   const [inquiries, setInquiries] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: user?.name || "",
-    phone: user?.phone || "",
-    bio: user?.bio || "",
-    role: user?.role || "user",
+    name: user?.name || '',
+    phone: user?.phone || '',
+    bio: user?.bio || '',
+    role: user?.role || 'user',
   });
 
   async function fetchData() {
@@ -46,7 +46,7 @@ const UserDashboard = () => {
       setInquiries(inquiriesRes.inquiries || []);
       setAlerts(alertsRes.alerts || []);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   }
 
@@ -61,41 +61,41 @@ const UserDashboard = () => {
       await updateProfile(profileData);
       setEditMode(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error('Error updating profile:', error);
     }
   };
 
   const stats = [
     {
       icon: FiHeart,
-      label: "Saved Properties",
+      label: 'Saved Properties',
       value: favorites.length,
-      color: "#ef4444",
+      color: '#ef4444',
     },
     {
       icon: FiMessageSquare,
-      label: "Inquiries Sent",
+      label: 'Inquiries Sent',
       value: inquiries.length,
-      color: "#3b82f6",
+      color: '#3b82f6',
     },
     {
       icon: FiBell,
-      label: "Active Alerts",
+      label: 'Active Alerts',
       value: alerts.filter((a) => a.isActive).length,
-      color: "#f59e0b",
+      color: '#f59e0b',
     },
   ];
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: FiHome },
-    { id: "favorites", label: "Favorites", icon: FiHeart },
+    { id: 'overview', label: 'Overview', icon: FiHome },
+    { id: 'favorites', label: 'Favorites', icon: FiHeart },
     {
-      id: "inquiries",
-      label: "Inquiries",
+      id: 'inquiries',
+      label: 'Inquiries',
       icon: FiMessageSquare,
-      badge: inquiries.filter((i) => i.status === "responded").length || null,
+      badge: inquiries.filter((i) => i.status === 'responded').length || null,
     },
-    { id: "profile", label: "Profile", icon: FiUser },
+    { id: 'profile', label: 'Profile', icon: FiUser },
   ];
 
   return (
@@ -120,7 +120,7 @@ const UserDashboard = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                className={`nav-item ${activeTab === tab.id ? "active" : ""}`}
+                className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 <tab.icon />
@@ -136,9 +136,9 @@ const UserDashboard = () => {
         {/* Main Content */}
         <main className="dashboard-main">
           {/* Overview Tab */}
-          {activeTab === "overview" && (
+          {activeTab === 'overview' && (
             <div className="dashboard-content">
-              <h1>Welcome back, {user?.name?.split(" ")[0]}!</h1>
+              <h1>Welcome back, {user?.name?.split(' ')[0]}!</h1>
               <p className="subtitle">
                 Here's what's happening with your property search
               </p>
@@ -146,7 +146,7 @@ const UserDashboard = () => {
               <div className="dashboard-section">
                 <div className="section-header">
                   <h2>Recent Inquiries</h2>
-                  <button onClick={() => setActiveTab("inquiries")}>
+                  <button onClick={() => setActiveTab('inquiries')}>
                     View All
                   </button>
                 </div>
@@ -157,7 +157,7 @@ const UserDashboard = () => {
                         <div className="inquiry-property">
                           <img
                             src={getImageUrl(
-                              inquiry.property?.images?.[0]?.url,
+                              inquiry.property?.images?.[0]?.url
                             )}
                             alt=""
                           />
@@ -172,7 +172,7 @@ const UserDashboard = () => {
                           <span className={`status-badge ${inquiry.status}`}>
                             {inquiry.status}
                           </span>
-                          {inquiry.status === "responded" && (
+                          {inquiry.status === 'responded' && (
                             <span className="new-reply-chip">New Reply</span>
                           )}
                           <span className="inquiry-date">
@@ -197,7 +197,7 @@ const UserDashboard = () => {
           )}
 
           {/* Favorites Tab */}
-          {activeTab === "favorites" && (
+          {activeTab === 'favorites' && (
             <div className="dashboard-content">
               <h1>Saved Properties</h1>
               <p className="subtitle">Properties you've added to favorites</p>
@@ -222,7 +222,7 @@ const UserDashboard = () => {
           )}
 
           {/* Inquiries Tab */}
-          {activeTab === "inquiries" && (
+          {activeTab === 'inquiries' && (
             <div className="dashboard-content">
               <h1>My Inquiries</h1>
               <p className="subtitle">Track all your property inquiries</p>
@@ -248,7 +248,7 @@ const UserDashboard = () => {
                         <span className={`status-badge ${inquiry.status}`}>
                           {inquiry.status}
                         </span>
-                        {inquiry.status === "responded" &&
+                        {inquiry.status === 'responded' &&
                           !inquiry.replyRead && (
                             <span className="new-reply-chip">New Reply</span>
                           )}
@@ -281,7 +281,7 @@ const UserDashboard = () => {
           )}
 
           {/* Profile Tab */}
-          {activeTab === "profile" && (
+          {activeTab === 'profile' && (
             <div className="dashboard-content">
               <div className="section-header">
                 <div>
@@ -289,11 +289,11 @@ const UserDashboard = () => {
                   <p className="subtitle">Manage your account information</p>
                 </div>
                 <button
-                  className={`btn-outline ${editMode ? "cancel" : ""}`}
+                  className={`btn-outline ${editMode ? 'cancel' : ''}`}
                   onClick={() => setEditMode(!editMode)}
                 >
                   {editMode ? (
-                    "Cancel"
+                    'Cancel'
                   ) : (
                     <>
                       <FiEdit2 /> Edit Profile
@@ -363,7 +363,7 @@ const UserDashboard = () => {
                           }
                         />
                       ) : (
-                        <p>{user?.phone || "Not provided"}</p>
+                        <p>{user?.phone || 'Not provided'}</p>
                       )}
                     </div>
 
@@ -386,9 +386,9 @@ const UserDashboard = () => {
                         </select>
                       ) : (
                         <p>
-                          {(user?.role === "seller") | "buyer"
-                            ? "Sell / List Property"
-                            : "Buy / Rent Property"}
+                          {(user?.role === 'seller') | 'buyer'
+                            ? 'Sell / List Property'
+                            : 'Buy / Rent Property'}
                         </p>
                       )}
                     </div>
@@ -408,7 +408,7 @@ const UserDashboard = () => {
                           placeholder="Tell us about yourself..."
                         />
                       ) : (
-                        <p>{user?.bio || "No bio added"}</p>
+                        <p>{user?.bio || 'No bio added'}</p>
                       )}
                     </div>
                   </div>
