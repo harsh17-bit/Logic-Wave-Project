@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   FiUser,
   FiMail,
@@ -7,16 +7,16 @@ import {
   FiPhone,
   FiEye,
   FiEyeOff,
-} from "react-icons/fi";
-import { useAuth } from "../context/authcontext.jsx";
-import "./Register.css";
+} from 'react-icons/fi';
+import { useAuth } from '../context/authcontext.jsx';
+import './Register.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,24 +29,30 @@ const Register = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setError(null);
     if (formErrors[name]) {
-      setFormErrors((prev) => ({ ...prev, [name]: "" }));
+      setFormErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = "Full name is required";
-    if (!formData.email.trim()) errors.email = "Email is required";
+    if (!formData.name.trim()) errors.name = 'Full name is required';
+    if (!formData.email.trim()) errors.email = 'Email is required';
     if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
-      errors.email = "Please enter a valid email";
+      errors.email = 'Please enter a valid email';
     }
-    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+    if (!formData.phone.trim()) errors.phone = 'Phone number is required';
     if (formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
-      errors.phone = "Please enter a valid 10-digit phone number";
+      errors.phone = 'Please enter a valid 10-digit phone number';
     }
-    if (!formData.password) errors.password = "Password is required";
-    if (formData.password && formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+    if (!formData.password) errors.password = 'Password is required';
+    if (
+      formData.password &&
+      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}$/.test(
+        formData.password
+      )
+    ) {
+      errors.password =
+        'Password must be at least 8 characters and include uppercase, lowercase, number & special character (@$!%*?&)';
     }
 
     setFormErrors(errors);
@@ -64,9 +70,9 @@ const Register = () => {
         phone: formData.phone.trim(),
         password: formData.password,
       });
-      navigate("/");
+      navigate('/');
     } catch (err) {
-      const message = err?.response?.data?.message || "Registration failed";
+      const message = err?.response?.data?.message || 'Registration failed';
       setError(message);
       console.error(err);
     } finally {
@@ -114,7 +120,7 @@ const Register = () => {
                     value={formData.name}
                     onChange={handleChange}
                     autoComplete="name"
-                    className={formErrors.name ? "input-error" : ""}
+                    className={formErrors.name ? 'input-error' : ''}
                   />
                 </div>
                 {formErrors.name && (
@@ -137,7 +143,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     autoComplete="email"
-                    className={formErrors.email ? "input-error" : ""}
+                    className={formErrors.email ? 'input-error' : ''}
                   />
                 </div>
                 {formErrors.email && (
@@ -161,7 +167,7 @@ const Register = () => {
                     onChange={handleChange}
                     autoComplete="tel"
                     pattern="[0-9]{10}"
-                    className={formErrors.phone ? "input-error" : ""}
+                    className={formErrors.phone ? 'input-error' : ''}
                   />
                 </div>
                 {formErrors.phone && (
@@ -178,13 +184,13 @@ const Register = () => {
                 </label>
                 <div className="register-input-wrapper">
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     id="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     autoComplete="new-password"
-                    className={formErrors.password ? "input-error" : ""}
+                    className={formErrors.password ? 'input-error' : ''}
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                     required
                   />
@@ -193,7 +199,7 @@ const Register = () => {
                     className="register-password-toggle"
                     onClick={() => setShowPassword((v) => !v)}
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      showPassword ? 'Hide password' : 'Show password'
                     }
                   >
                     {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -215,7 +221,7 @@ const Register = () => {
                 {isLoading ? (
                   <span className="register-spinner" />
                 ) : (
-                  "Create Account"
+                  'Create Account'
                 )}
               </button>
             </form>

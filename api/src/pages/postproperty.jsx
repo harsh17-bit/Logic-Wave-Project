@@ -9,8 +9,10 @@ import {
   FiPlus,
   FiX,
   FiUpload,
+  FiZap,
 } from 'react-icons/fi';
 import { propertyService } from '../services/propertyservice';
+import mlService from '../services/mlservice';
 import { useAuth } from '../context/authcontext.jsx';
 import './PostProperty.css';
 const PostProperty = () => {
@@ -22,6 +24,8 @@ const PostProperty = () => {
   const [loading, setLoading] = useState(false);
   const [loadingProperty, setLoadingProperty] = useState(isEditMode);
   const [errors, setErrors] = useState({});
+  const [aiPrediction, setAiPrediction] = useState(null);
+  const [predicting, setPredicting] = useState(false);
 
   const [formData, setFormData] = useState({
     // Basic Info
@@ -52,6 +56,7 @@ const PostProperty = () => {
       facing: '',
       ageOfProperty: '',
       possessionStatus: 'ready-to-move',
+      parkingSlots: '',
     },
 
     // Pricing
@@ -96,6 +101,7 @@ const PostProperty = () => {
         ageOfProperty: prev.specifications.ageOfProperty ?? '',
         possessionStatus:
           prev.specifications.possessionStatus ?? 'ready-to-move',
+        parkingSlots: prev.specifications.parkingSlots ?? '',
       },
       priceBreakdown: {
         maintenanceCharges: prev.priceBreakdown.maintenanceCharges ?? '',
@@ -137,6 +143,7 @@ const PostProperty = () => {
             ageOfProperty: p.specifications?.ageOfProperty ?? '',
             possessionStatus:
               p.specifications?.possessionStatus ?? 'ready-to-move',
+            parkingSlots: p.specifications?.parkingSlots ?? '',
           },
           price: p.price ?? '',
           priceBreakdown: {
@@ -352,6 +359,27 @@ const PostProperty = () => {
       ...formData,
       images: formData.images.filter((_, i) => i !== index),
     });
+  };
+
+  const formatPrice = (p) =>
+    p >= 10000000
+      ? '\u20b9' + (p / 10000000).toFixed(2) + ' Cr'
+      : p >= 100000
+        ? '\u20b9' + (p / 100000).toFixed(1) + ' L'
+        : '\u20b9' + Number(p).toLocaleString('en-IN');
+
+  const fetchAiPrediction = async () => {
+    setPredicting(true);
+    setAiPrediction(null);
+    const result = await mlService.predictPrice({
+      city: formData.location.city,
+      area: Number(formData.specifications.carpetArea) || 1000,
+      bedrooms: Number(formData.specifications.bedrooms) || 2,
+      bathrooms: Number(formData.specifications.bathrooms) || 1,
+      amenitiesCount: formData.amenities.length,
+    });
+    setPredicting(false);
+    setAiPrediction(result.success ? result.data : { error: result.error });
   };
 
   const validateStep = (step) => {
@@ -1185,6 +1213,80 @@ const PostProperty = () => {
                     <div
                       className={`pp-toggle-switch${formData.priceBreakdown.negotiable ? ' pp-toggle-on' : ''}`}
                     />
+                  </div>
+                </div>
+
+                {/* ── AI Price Prediction ── */}
+                <div className="pp-field pp-full">
+                  <div className="pp-ai-card">
+                    <div className="pp-ai-card-header">
+                      <FiZap size={18} className="pp-ai-icon" />
+                      <div className="pp-ai-card-text">
+                        <p className="pp-ai-title">AI Price Suggestion</p>
+                        <p className="pp-ai-sub">
+                          Based on city, area &amp; bedrooms you entered
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="pp-ai-btn"
+                        onClick={fetchAiPrediction}
+                        disabled={
+                          predicting ||
+                          !formData.location.city ||
+                          !formData.specifications.carpetArea
+                        }
+                      >
+                        {predicting ? 'Analysing…' : 'Get Estimate'}
+                      </button>
+                    </div>
+
+                    {predicting && (
+                      <div className="pp-ai-loading">
+                        <span className="pp-ai-spinner" />
+                        <span>Running prediction model…</span>
+                      </div>
+                    )}
+
+                    {aiPrediction && !aiPrediction.error && (
+                      <div className="pp-ai-result">
+                        <div className="pp-ai-result-main">
+                          <span className="pp-ai-label">Suggested Price</span>
+                          <span className="pp-ai-price">
+                            {formatPrice(aiPrediction.predictedPrice)}
+                          </span>
+                          <span className="pp-ai-range">
+                            Range: {formatPrice(aiPrediction.priceRange.min)}{' '}
+                            &ndash; {formatPrice(aiPrediction.priceRange.max)}
+                          </span>
+                        </div>
+                        <div className="pp-ai-result-meta">
+                          <span className="pp-ai-sqft">
+                            &#x20b9;
+                            {Number(aiPrediction.pricePerSqft).toLocaleString(
+                              'en-IN'
+                            )}
+                            /sq.ft
+                          </span>
+                          <button
+                            type="button"
+                            className="pp-ai-use-btn"
+                            onClick={() =>
+                              setFormData({
+                                ...formData,
+                                price: String(aiPrediction.predictedPrice),
+                              })
+                            }
+                          >
+                            Use this price
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {aiPrediction?.error && (
+                      <p className="pp-ai-error">{aiPrediction.error}</p>
+                    )}
                   </div>
                 </div>
               </div>

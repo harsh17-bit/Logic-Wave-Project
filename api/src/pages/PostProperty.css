@@ -101,7 +101,7 @@
 }
 
 .pp-step-item:not(:last-child)::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 19px;
   top: 42px;
@@ -448,7 +448,7 @@
 
 .pp-section-divider::before,
 .pp-section-divider::after {
-  content: "";
+  content: '';
   flex: 1;
   height: 1px;
   background: #e4e7eb;
@@ -559,7 +559,7 @@
   background: rgba(139, 69, 19, 0.02);
 }
 
-.pp-upload-zone input[type="file"] {
+.pp-upload-zone input[type='file'] {
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -814,7 +814,7 @@
 }
 
 .pp-toggle-switch::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 17px;
   height: 17px;
@@ -928,6 +928,179 @@
   opacity: 0.55;
   cursor: not-allowed;
   transform: none;
+}
+
+/* ═══════════════════════
+   AI PRICE PREDICTION CARD
+═══════════════════════ */
+.pp-ai-card {
+  background: linear-gradient(135deg, #fdf8f2 0%, #fff9f2 100%);
+  border: 1.5px solid #e8d5bc;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pp-ai-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pp-ai-icon {
+  color: #c47f3a;
+  flex-shrink: 0;
+}
+
+.pp-ai-card-text {
+  flex: 1;
+}
+
+.pp-ai-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1c2833;
+  margin: 0;
+}
+
+.pp-ai-sub {
+  font-size: 0.76rem;
+  color: #9ba5b0;
+  margin: 2px 0 0;
+}
+
+.pp-ai-btn {
+  background: #c47f3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+  flex-shrink: 0;
+}
+
+.pp-ai-btn:hover:not(:disabled) {
+  background: #a8682e;
+  transform: translateY(-1px);
+}
+
+.pp-ai-btn:disabled {
+  background: #d4b896;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pp-ai-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #9ba5b0;
+}
+
+.pp-ai-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e8d5bc;
+  border-top-color: #c47f3a;
+  border-radius: 50%;
+  animation: pp-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pp-ai-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border: 1.5px solid #e8d5bc;
+  border-radius: 10px;
+  padding: 14px 18px;
+  flex-wrap: wrap;
+}
+
+.pp-ai-result-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pp-ai-label {
+  font-size: 0.73rem;
+  color: #9ba5b0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pp-ai-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1c2833;
+  letter-spacing: -0.02em;
+}
+
+.pp-ai-range {
+  font-size: 0.77rem;
+  color: #6b7a8a;
+}
+
+.pp-ai-result-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.pp-ai-sqft {
+  font-size: 0.8rem;
+  color: #6b7a8a;
+  font-weight: 500;
+}
+
+.pp-ai-use-btn {
+  background: transparent;
+  color: #c47f3a;
+  border: 1.5px solid #c47f3a;
+  border-radius: 7px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    color 0.18s;
+  white-space: nowrap;
+}
+
+.pp-ai-use-btn:hover {
+  background: #c47f3a;
+  color: #fff;
+}
+
+.pp-ai-error {
+  font-size: 0.8rem;
+  color: #d9534f;
+  margin: 0;
+  padding: 8px 12px;
+  background: #fff5f5;
+  border-radius: 7px;
+  border: 1px solid #f5c6cb;
 }
 
 /* ═══════════════════════
