@@ -19,6 +19,7 @@ import Hero from './components/hero.jsx';
 import ExploreOptions from './components/ExploreOptions';
 import TopCities from './components/TopCities';
 import FeaturedProjects from './components/FeaturedProjects';
+import AiPriceMatchSection from './components/AiPriceMatchSection';
 import PopularTools from './components/PopularTools';
 import TestimonialsSection from './components/TestimonialsSection';
 
@@ -52,6 +53,7 @@ const HomePage = () => {
       <TopCities />
       <PopularTools />
       <FeaturedProjects />
+      <AiPriceMatchSection />
       <TestimonialsSection />
     </>
   );

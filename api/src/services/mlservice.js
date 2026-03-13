@@ -27,6 +27,10 @@ class MLService {
           bedrooms: Number(propertyData.bedrooms) || 2,
           bathrooms: Number(propertyData.bathrooms) || 1,
           amenitiesCount: Number(propertyData.amenitiesCount) || 0,
+          listedPrice:
+            propertyData.listedPrice !== undefined
+              ? Number(propertyData.listedPrice)
+              : undefined,
         },
         {
           timeout: 10000, // 10 second timeout

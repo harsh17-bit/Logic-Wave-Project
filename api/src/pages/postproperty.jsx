@@ -368,6 +368,34 @@ const PostProperty = () => {
         ? '\u20b9' + (p / 100000).toFixed(1) + ' L'
         : '\u20b9' + Number(p).toLocaleString('en-IN');
 
+  const getPriceMatchAnalysis = (askingPrice, prediction) => {
+    const asking = Number(askingPrice);
+    const predicted = Number(prediction?.predictedPrice || 0);
+
+    if (
+      !asking ||
+      !predicted ||
+      Number.isNaN(asking) ||
+      Number.isNaN(predicted)
+    ) {
+      return null;
+    }
+
+    const diffPct = ((asking - predicted) / predicted) * 100;
+    const absDiff = Math.abs(diffPct);
+    const matchScore = Math.max(0, Math.round(100 - absDiff * 2));
+
+    let status = 'Fairly priced';
+    if (diffPct <= -8) status = 'Good value';
+    if (diffPct >= 10) status = 'Premium priced';
+
+    return {
+      status,
+      diffPct: diffPct.toFixed(1),
+      matchScore,
+    };
+  };
+
   const fetchAiPrediction = async () => {
     setPredicting(true);
     setAiPrediction(null);
@@ -377,6 +405,7 @@ const PostProperty = () => {
       bedrooms: Number(formData.specifications.bedrooms) || 2,
       bathrooms: Number(formData.specifications.bathrooms) || 1,
       amenitiesCount: formData.amenities.length,
+      listedPrice: Number(formData.price) || undefined,
     });
     setPredicting(false);
     setAiPrediction(result.success ? result.data : { error: result.error });
@@ -1281,6 +1310,44 @@ const PostProperty = () => {
                             Use this price
                           </button>
                         </div>
+
+                        {getPriceMatchAnalysis(
+                          formData.price,
+                          aiPrediction
+                        ) && (
+                          <div
+                            className="pp-ai-result-main"
+                            style={{ marginTop: 10 }}
+                          >
+                            <span className="pp-ai-label">Price Match</span>
+                            <span className="pp-ai-range">
+                              {
+                                getPriceMatchAnalysis(
+                                  formData.price,
+                                  aiPrediction
+                                ).status
+                              }{' '}
+                              (
+                              {
+                                getPriceMatchAnalysis(
+                                  formData.price,
+                                  aiPrediction
+                                ).diffPct
+                              }
+                              % vs AI estimate)
+                            </span>
+                            <span className="pp-ai-range">
+                              Match Score:{' '}
+                              {
+                                getPriceMatchAnalysis(
+                                  formData.price,
+                                  aiPrediction
+                                ).matchScore
+                              }
+                              /100
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
 

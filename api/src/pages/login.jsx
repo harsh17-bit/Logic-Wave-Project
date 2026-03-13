@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FiMail,
   FiLock,
@@ -22,6 +22,25 @@ const Login = () => {
   const [activeRole] = useState('buyer'); // buyer, seller, admin
   const { login, error, setError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let redirectReason = location.state?.reason || '';
+  if (!redirectReason) {
+    try {
+      const logRaw = sessionStorage.getItem('lastRedirectLog');
+      if (logRaw) {
+        const parsed = JSON.parse(logRaw);
+        if (parsed?.to === '/login') {
+          redirectReason = parsed.reason || '';
+        }
+      }
+    } catch {
+      redirectReason = '';
+    }
+  }
+
+  const redirectMessage =
+    redirectReason === 'login_required' ? 'Kindly Login For Post-Property' : '';
 
   const roles = [
     {
@@ -112,6 +131,9 @@ const Login = () => {
               <h2>Welcome Back</h2>
               <p>Sign in to your account to continue</p>
             </div>
+            {redirectMessage && (
+              <div className="auth-error">{redirectMessage}</div>
+            )}
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group slide-in-1">
                 <label htmlFor="email">Email Address</label>

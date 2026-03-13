@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FiUser,
   FiMail,
@@ -23,6 +23,27 @@ const Register = () => {
   const [formErrors, setFormErrors] = useState({});
   const { register, error, setError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let redirectReason = location.state?.reason || '';
+  if (!redirectReason) {
+    try {
+      const logRaw = sessionStorage.getItem('lastRedirectLog');
+      if (logRaw) {
+        const parsed = JSON.parse(logRaw);
+        if (parsed?.to === '/register') {
+          redirectReason = parsed.reason || '';
+        }
+      }
+    } catch {
+      redirectReason = '';
+    }
+  }
+
+  const redirectMessage =
+    redirectReason === 'insufficient_role'
+      ? 'Only sellers can post property. Please register first.'
+      : '';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +124,10 @@ const Register = () => {
               <h2>Create Account</h2>
               <p>Fill in your details to get started</p>
             </div>
+
+            {redirectMessage && (
+              <div className="register-error">{redirectMessage}</div>
+            )}
 
             {error && <div className="register-error">{error}</div>}
 
