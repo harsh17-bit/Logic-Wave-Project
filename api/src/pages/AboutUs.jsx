@@ -44,27 +44,27 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: 'Arjun Mehta',
+    name: 'XYZ',
     role: 'Founder & CEO',
-    initials: 'AM',
+    initials: 'XY',
     bio: '15 years in real estate, passionate about making home ownership accessible to every family.',
   },
   {
-    name: 'Priya Sharma',
+    name: 'ABC',
     role: 'Chief Technology Officer',
-    initials: 'PS',
+    initials: 'AB',
     bio: "Built UrbanStay's property matching platform from the ground up.",
   },
   {
-    name: 'Ravi Kumar',
+    name: 'ABC',
     role: 'Head of Operations',
-    initials: 'RK',
+    initials: 'AB',
     bio: 'Ensures every listing is verified and every customer experience is smooth.',
   },
   {
-    name: 'Sneha Patel',
+    name: 'ABC',
     role: 'Head of Customer Success',
-    initials: 'SP',
+    initials: 'AB ',
     bio: 'Makes sure that buying a home is exciting, not stressful.',
   },
 ];
@@ -160,8 +160,8 @@ const AboutUs = () => {
             <div key={m.name} className="about-team-card">
               <div className="about-team-avatar">{m.initials}</div>
               <h3>{m.name}</h3>
-              <span className="about-team-role">{m.role}</span>
-              <p>{m.bio}</p>
+              {/* <span className="about-team-role">{m.role}</span> */}
+              {/* <p>{m.bio}</p> */}
             </div>
           ))}
         </div>
@@ -176,24 +176,24 @@ const AboutUs = () => {
         <div className="about-contact-grid">
           <div className="about-contact-item">
             <FiPhone size={20} />
-            <div>
+            {/* <div>
               <strong>Call Us</strong>
               <span>+91 98765 43210</span>
-            </div>
+            </div> */}
           </div>
           <div className="about-contact-item">
             <FiMail size={20} />
-            <div>
+            {/* <div>
               <strong>Email Us</strong>
               <span>hello@urbanstay.in</span>
-            </div>
+            </div> */}
           </div>
           <div className="about-contact-item">
             <FiMapPin size={20} />
-            <div>
+            {/* <div>
               <strong>Visit Us</strong>
               <span>12th Floor, Tech Park, Bengaluru</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

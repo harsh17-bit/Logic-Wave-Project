@@ -109,12 +109,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (!isAuthenticated) {
-    writeRedirectLog('login_required', '/login');
+    const reason =
+      location.pathname === '/post-property'
+        ? 'post_property_login_required'
+        : 'login_required';
+    writeRedirectLog(reason, '/login');
     return (
       <Navigate
         to="/login"
         replace
-        state={{ redirectFrom: location.pathname, reason: 'login_required' }}
+        state={{ redirectFrom: location.pathname, reason }}
       />
     );
   }
@@ -157,7 +161,8 @@ function AppContent() {
     const interval = setInterval(async () => {
       try {
         const res = await fetch(`${API_URL}/health`);
-        if (res.status === 401 || res.status === 403) {
+        const hasToken = !!localStorage.getItem('token');
+        if ((res.status === 401 || res.status === 403) && hasToken) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           window.location.href = '/login';

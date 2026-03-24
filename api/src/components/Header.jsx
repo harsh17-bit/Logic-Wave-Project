@@ -29,7 +29,7 @@ const Header = () => {
   const handleSellClick = (e) => {
     if (!isAuthenticated) {
       e.preventDefault();
-      alert('Kindly Login For Post-Prperty');
+      alert('Kindly Login For Post-Property');
       setIsMenuOpen(false);
       navigate('/login');
       return;
@@ -121,7 +121,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-[var(--color-dark)] active:text-[var(--color-dark)] focus-visible:text-[var(--color-dark)] transition-colors"
               >
                 <FiUser className="w-3.5 h-3.5" />
                 Login
@@ -203,7 +203,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm text-gray-700 font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:text-[var(--color-primary)] active:text-[var(--color-primary)] focus-visible:text-[var(--color-primary)] transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <FiUser className="w-4 h-4" />

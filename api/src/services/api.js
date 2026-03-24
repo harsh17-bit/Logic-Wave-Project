@@ -28,11 +28,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid - redirect to login
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
+    const hasToken = !!localStorage.getItem('token');
+    const isAuthRequest =
+      /\/auth\/(login|register|forgotpassword|resetpassword|check-email)/.test(
+        requestUrl
+      );
+
+    // Only force redirect for authenticated sessions that become unauthorized.
+    if (status === 401 && hasToken && !isAuthRequest) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

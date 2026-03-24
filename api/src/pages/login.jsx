@@ -12,6 +12,7 @@ import {
   FiUserCheck,
 } from 'react-icons/fi';
 import { useAuth } from '../context/authcontext.jsx';
+import PaymentToast from '../components/PaymentToast.jsx';
 import './Auth.css';
 import { loginSchema } from '../validators/loginschema.js';
 const Login = () => {
@@ -19,6 +20,11 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [loginToast, setLoginToast] = useState({
+    show: false,
+    type: 'success',
+    message: '',
+  });
   const [activeRole] = useState('buyer'); // buyer, seller, admin
   const { login, error, setError } = useAuth();
   const navigate = useNavigate();
@@ -32,6 +38,7 @@ const Login = () => {
         const parsed = JSON.parse(logRaw);
         if (parsed?.to === '/login') {
           redirectReason = parsed.reason || '';
+          sessionStorage.removeItem('lastRedirectLog');
         }
       }
     } catch {
@@ -40,7 +47,11 @@ const Login = () => {
   }
 
   const redirectMessage =
-    redirectReason === 'login_required' ? 'Kindly Login For Post-Property' : '';
+    redirectReason === 'post_property_login_required'
+      ? 'Kindly Login For Post-Property'
+      : redirectReason === 'login_required'
+        ? 'Please login to continue.'
+        : '';
 
   const roles = [
     {
@@ -98,13 +109,28 @@ const Login = () => {
       const response = await login(formData);
       const userRole = response?.user?.role || activeRole;
 
-      if (userRole === 'admin' || userRole === 'seller') {
-        navigate('/dashboard');
-      } else {
-        navigate('/');
-      }
+      setLoginToast({
+        show: true,
+        type: 'success',
+        message: 'Login successful.',
+      });
+
+      setTimeout(() => {
+        if (userRole === 'admin' || userRole === 'seller') {
+          navigate('/dashboard');
+        } else {
+          navigate('/');
+        }
+      }, 700);
     } catch (err) {
-      console.error(err);
+      setLoginToast({
+        show: true,
+        type: 'error',
+        message:
+          err?.response?.data?.message ||
+          error ||
+          'Login failed. Please try again.',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -114,6 +140,13 @@ const Login = () => {
 
   return (
     <div className="auth-page">
+      <PaymentToast
+        show={loginToast.show}
+        type={loginToast.type}
+        message={loginToast.message}
+        duration={2500}
+        onClose={() => setLoginToast((prev) => ({ ...prev, show: false }))}
+      />
       <div className="auth-container">
         <div className={`auth-left ${activeRole}-theme`}>
           <div className="auth-welcome-content">
