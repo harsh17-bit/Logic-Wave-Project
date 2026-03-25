@@ -124,6 +124,30 @@ node seeder.js
 
 Full Postman collection is available in [`server/postman/`](server/postman/).
 
+## Deploying ML Service On Render
+
+If AI Price Match shows `ML service unavailable`, backend cannot reach Flask ML service.
+
+Use a separate Render Web Service for `Ml-service/`:
+
+1. Root Directory: `Ml-service`
+2. Build Command: `pip install -r requirements.txt`
+3. Start Command: `gunicorn app:app --bind 0.0.0.0:$PORT`
+
+Then set backend environment variable on your Node service:
+
+```env
+ML_SERVICE_URL=https://<your-ml-service>.onrender.com
+ML_TIMEOUT_MS=15000
+```
+
+Quick verification:
+
+- Open `https://<your-ml-service>.onrender.com/health`
+- Open `https://<your-node-service>.onrender.com/api/ml/health`
+
+Both should return JSON with `status: ok`.
+
 ---
 
 ## Roles & Permissions

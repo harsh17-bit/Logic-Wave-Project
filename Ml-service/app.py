@@ -1,4 +1,5 @@
 import re
+import os
 
 import joblib
 import numpy as np
@@ -294,4 +295,5 @@ def get_locations():
 
 if __name__ == "__main__":
     print(f"Loaded model: {metadata.get('model_name', 'unknown')}")
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=False)
