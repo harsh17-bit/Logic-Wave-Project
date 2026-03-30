@@ -366,6 +366,11 @@
   align-items: center;
   gap: 1rem;
   flex: 1;
+  min-width: 0;
+}
+
+.inquiry-content {
+  min-width: 0;
 }
 
 .inquiry-property img {
@@ -390,6 +395,13 @@
   gap: 0.25rem;
 }
 
+.sender-info {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .inquiry-message {
   margin-top: 0.5rem;
   color: #475569 !important;
@@ -406,6 +418,36 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.inquiry-card.detailed {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.inquiry-details {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.inquiry-meta-line,
+.inquiry-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.inquiry-actions {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.replied-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .status-badge {
@@ -669,6 +711,12 @@
 .btn-outline.small {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
+}
+
+.btn-primary.small {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 10px;
 }
 
 .btn-icon {
@@ -950,6 +998,48 @@
   .sidebar-action {
     margin-top: 1rem;
     padding-top: 1rem;
+  }
+
+  .inquiry-card,
+  .inquiry-card.detailed {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inquiry-property {
+    width: 100%;
+  }
+
+  .inquiry-property img {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  .inquiry-message {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .inquiry-details {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .inquiry-meta-line,
+  .inquiry-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .inquiry-actions .btn-primary.small,
+  .inquiry-actions .btn-outline.small {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .inquiry-actions .replied-label {
+    flex: 1;
   }
 }
 /* Status select dropdown for seller dashboard */

@@ -890,7 +890,7 @@ const SellerDashboard = () => {
                           src={getImageUrl(inquiry.property?.images?.[0]?.url)}
                           alt=""
                         />
-                        <div>
+                        <div className="inquiry-content">
                           <h4>{inquiry.property?.title}</h4>
                           <p className="sender-info">
                             <strong>{inquiry.sender?.name}</strong> •{' '}
@@ -900,28 +900,32 @@ const SellerDashboard = () => {
                         </div>
                       </div>
                       <div className="inquiry-details">
-                        <span className={`status-badge ${inquiry.status}`}>
-                          {inquiry.status}
-                        </span>
-                        <span className="inquiry-date">
-                          {new Date(inquiry.createdAt).toLocaleDateString()}
-                        </span>
-                        {inquiry.status !== 'responded' ? (
-                          <button
-                            className="btn-primary small"
-                            onClick={() => handleOpenReply(inquiry)}
+                        <div className="inquiry-meta-line">
+                          <span className={`status-badge ${inquiry.status}`}>
+                            {inquiry.status}
+                          </span>
+                          <span className="inquiry-date">
+                            {new Date(inquiry.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="inquiry-actions">
+                          {inquiry.status !== 'responded' ? (
+                            <button
+                              className="btn-primary small"
+                              onClick={() => handleOpenReply(inquiry)}
+                            >
+                              Respond
+                            </button>
+                          ) : (
+                            <span className="replied-label">Replied</span>
+                          )}
+                          <Link
+                            to={`/inquiry/${inquiry._id}`}
+                            className="btn-outline small"
                           >
-                            Respond
-                          </button>
-                        ) : (
-                          <span className="text-sm text-gray-500">Replied</span>
-                        )}
-                        <Link
-                          to={`/inquiry/${inquiry._id}`}
-                          className="btn-outline small"
-                        >
-                          <FiEye /> View Details
-                        </Link>
+                            <FiEye /> View Details
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}
