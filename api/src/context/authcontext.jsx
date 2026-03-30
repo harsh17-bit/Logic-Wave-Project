@@ -48,20 +48,9 @@ export const AuthProvider = ({ children }) => {
   // Check for existing session on mount
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem(TOKEN_KEY);
-      const savedUser = localStorage.getItem(USER_KEY);
-
-      if (token && savedUser) {
-        try {
-          // Verify token is still valid
-          const response = await authService.getMe();
-          setUser(response.user);
-        } catch {
-          // Token invalid - clear storage
-          localStorage.removeItem(TOKEN_KEY);
-          localStorage.removeItem(USER_KEY);
-        }
-      }
+      // Clear any stored auth data on app startup (prevents persistent login across sessions)
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
       setLoading(false);
     };
 
