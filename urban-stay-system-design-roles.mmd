@@ -1,0 +1,41 @@
+﻿flowchart LR
+    %% Roles
+    V[Visitor]
+    U[Registered User]
+    S[Seller/Agent]
+    A[Admin]
+
+    %% Core System
+    W[Urban-Stay Web Portal]
+    API[API Layer\nNode.js + Express]
+    DB[(MongoDB)]
+
+    %% Role capabilities
+    V -->|Browse, Search| W
+    U -->|Book Visit, Inquiry, Review| W
+    S -->|Manage Listings, Reply Inquiry| W
+    A -->|Manage Users, Properties, Reports| W
+
+    W --> API
+    API --> DB
+
+    %% Main modules
+    M1[Authentication & Authorization]
+    M2[Property Listing Module]
+    M3[Inquiry & Appointment Module]
+    M4[Payment Module]
+    M5[Admin Dashboard & Analytics]
+
+    API --> M1
+    API --> M2
+    API --> M3
+    API --> M4
+    API --> M5
+
+    classDef role fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef system fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#111827;
+    classDef module fill:#fff7ed,stroke:#c2410c,stroke-width:1.4px,color:#111827;
+
+    class V,U,S,A role;
+    class W,API,DB system;
+    class M1,M2,M3,M4,M5 module;

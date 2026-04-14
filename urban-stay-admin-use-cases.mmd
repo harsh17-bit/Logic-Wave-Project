@@ -1,0 +1,15 @@
+﻿flowchart TD
+    A[Admin]
+
+    A -- Manages --> UM[User Management]
+    A -- Controls --> PM[Property Management]
+    A -- Handles --> BM[Booking Management]
+    A -- Responds --> IM[Inquiry Management]
+    A -- Monitors --> PAY[Payment Monitoring]
+    A -- Generates --> RA[Reports and Analytics]
+
+    classDef admin fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef module fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+
+    class A admin;
+    class UM,PM,BM,IM,PAY,RA module;

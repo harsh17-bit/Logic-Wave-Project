@@ -1,0 +1,70 @@
+﻿erDiagram
+    USER {
+        ObjectId _id PK
+        string name
+        string email
+        string role
+        bool isVerified
+        bool isActive
+    }
+
+    PROPERTY {
+        ObjectId _id PK
+        ObjectId owner FK
+        string title
+        string listingType
+        string propertyType
+        number price
+        string status
+        bool isFeatured
+    }
+
+    INQUIRY {
+        ObjectId _id PK
+        ObjectId property FK
+        ObjectId sender FK
+        ObjectId receiver FK
+        string inquiryType
+        string status
+        date preferredVisitDate
+    }
+
+    REVIEW {
+        ObjectId _id PK
+        ObjectId property FK
+        ObjectId user FK
+        number rating
+        string status
+    }
+
+    PAYMENT {
+        ObjectId _id PK
+        string transactionId
+        ObjectId property FK
+        ObjectId seller FK
+        number amount
+        string status
+        date featuredUntil
+    }
+
+    PROJECT {
+        ObjectId _id PK
+        ObjectId developer FK
+        string title
+        string status
+        bool isFeatured
+    }
+
+    %% Relationship + operation labels
+    USER ||--o{ PROPERTY : "creates/updates/deletes listing"
+    USER ||--o{ PROJECT : "creates/manages project"
+
+    USER ||--o{ INQUIRY : "sends request / schedules visit"
+    PROPERTY ||--o{ INQUIRY : "receives/responds inquiry"
+    USER ||--o{ INQUIRY : "owner or agent handles"
+
+    USER ||--o{ REVIEW : "writes/edits review"
+    PROPERTY ||--o{ REVIEW : "collects ratings"
+
+    USER ||--o{ PAYMENT : "initiates featured payment"
+    PROPERTY ||--o{ PAYMENT : "featured/unfeatured by payment"

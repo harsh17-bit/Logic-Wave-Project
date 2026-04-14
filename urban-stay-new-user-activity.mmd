@@ -1,0 +1,21 @@
+﻿flowchart TD
+    S([Start])
+
+    S -- Click New User Registration --> A1[Choose Language]
+    A1 -- Gujarati --> A2[Fill Registration Form in Gujarati]
+    A1 -- English --> A3[Fill Registration Form in English]
+
+    A2 --> A4[Submit Form]
+    A3 --> A4
+    A4 --> A5[System Validates and Saves User Profile]
+
+    S -- Click Finance Guidance Button --> B1[Show Home Loan and Budget Guidance]
+
+    A5 --> E([End])
+    B1 --> E
+
+    classDef startend fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef action fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+
+    class S,E startend;
+    class A1,A2,A3,A4,A5,B1 action;

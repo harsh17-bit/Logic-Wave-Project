@@ -1,0 +1,29 @@
+﻿flowchart LR
+    N[New User Profile]
+
+    P1((user_id))
+    P2((name))
+    P3((email))
+    P4((phone))
+    P5((password_hash))
+    P6((role = user))
+    P7((preferred_language))
+    P8((city))
+    P9((registration_status))
+    P10((created_at))
+
+    N --- P1
+    N --- P2
+    N --- P3
+    N --- P4
+    N --- P5
+    N --- P6
+    N --- P7
+    N --- P8
+    N --- P9
+    N --- P10
+
+    classDef core fill:#e8f0ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef attr fill:#fce7f3,stroke:#be185d,stroke-width:1.2px,color:#111827;
+    class N core;
+    class P1,P2,P3,P4,P5,P6,P7,P8,P9,P10 attr;

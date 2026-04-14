@@ -1,0 +1,48 @@
+﻿flowchart TD
+    S([Start])
+    A1[Admin Login]
+    D1{Valid Credentials?}
+    A2[Open Dashboard]
+    A3[Show Login Error]
+
+    A4[Select Module]
+    D2{Module Type}
+
+    M1[User Management]
+    M2[Property Management]
+    M3[Booking Management]
+    M4[Inquiry Management]
+    M5[Reports and Analytics]
+
+    A5[Update Data]
+    A6[Save Changes]
+    D3{Saved Successfully?}
+    A7[Show Success Message]
+    A8[Show Error and Retry]
+
+    A9[Logout]
+    E([End])
+
+    S --> A1 --> D1
+    D1 -- No --> A3 --> A1
+    D1 -- Yes --> A2 --> A4 --> D2
+
+    D2 --> M1 --> A5
+    D2 --> M2 --> A5
+    D2 --> M3 --> A5
+    D2 --> M4 --> A5
+    D2 --> M5 --> A7
+
+    A5 --> A6 --> D3
+    D3 -- Yes --> A7 --> A4
+    D3 -- No --> A8 --> A6
+
+    A4 --> A9 --> E
+
+    classDef startend fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef action fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+    classDef decision fill:#fef3c7,stroke:#b45309,stroke-width:1.5px,color:#111827;
+
+    class S,E startend;
+    class A1,A2,A3,A4,A5,A6,A7,A8,A9,M1,M2,M3,M4,M5 action;
+    class D1,D2,D3 decision;

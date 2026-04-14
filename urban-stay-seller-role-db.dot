@@ -1,0 +1,20 @@
+digraph G {
+  graph [bgcolor="#1f1f1f", pad="0.3", nodesep="0.2", ranksep="0.2"];
+  node [shape=plain, fontname="Segoe UI", fontcolor="#f3f4f6"];
+  tbl [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLPADDING="10" COLOR="#3f3f46" BGCOLOR="#27272a">
+      <TR><TD BGCOLOR="#3f3f46"><FONT COLOR="#ffffff"><B>Column Name</B></FONT></TD><TD BGCOLOR="#3f3f46"><FONT COLOR="#ffffff"><B>MongoDB Type</B></FONT></TD><TD BGCOLOR="#3f3f46"><FONT COLOR="#ffffff"><B>Constraints</B></FONT></TD><TD BGCOLOR="#3f3f46"><FONT COLOR="#ffffff"><B>Description</B></FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">_id</FONT></TD><TD><FONT COLOR="#e5e7eb">ObjectId</FONT></TD><TD><FONT COLOR="#e5e7eb">Primary Key, Auto Generated</FONT></TD><TD><FONT COLOR="#e5e7eb">Unique ID for each seller</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">name</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Required</FONT></TD><TD><FONT COLOR="#e5e7eb">Seller full name</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">email</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Required, Unique, Lowercase</FONT></TD><TD><FONT COLOR="#e5e7eb">Seller login email</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">password</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Required, Hashed</FONT></TD><TD><FONT COLOR="#e5e7eb">Encrypted password</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">phone</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Optional</FONT></TD><TD><FONT COLOR="#e5e7eb">Contact number</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">role</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Enum, Value seller</FONT></TD><TD><FONT COLOR="#e5e7eb">Property seller role</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">companyName</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Optional</FONT></TD><TD><FONT COLOR="#e5e7eb">Seller company or agency name</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">reraNumber</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Optional</FONT></TD><TD><FONT COLOR="#e5e7eb">RERA registration number</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">isVerified</FONT></TD><TD><FONT COLOR="#e5e7eb">Boolean</FONT></TD><TD><FONT COLOR="#e5e7eb">Default false</FONT></TD><TD><FONT COLOR="#e5e7eb">Seller verification status</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">registrationStatus</FONT></TD><TD><FONT COLOR="#e5e7eb">String</FONT></TD><TD><FONT COLOR="#e5e7eb">Enum: incomplete/complete/verified</FONT></TD><TD><FONT COLOR="#e5e7eb">Onboarding progress</FONT></TD></TR>
+      <TR><TD><FONT COLOR="#e5e7eb">createdAt</FONT></TD><TD><FONT COLOR="#e5e7eb">Date</FONT></TD><TD><FONT COLOR="#e5e7eb">Auto timestamp</FONT></TD><TD><FONT COLOR="#e5e7eb">Record creation time</FONT></TD></TR>
+    </TABLE>
+  >];
+}

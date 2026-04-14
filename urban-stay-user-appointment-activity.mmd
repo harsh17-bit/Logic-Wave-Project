@@ -1,0 +1,34 @@
+﻿flowchart TD
+    S([Start])
+    U1[User Opens Urban-Stay Website]
+    U2[Search and Filter Properties]
+    U3[View Property Details]
+    D1{Property Selected?}
+    U4[Choose Visit Date and Time]
+    D2{Slot Available?}
+    U5[Fill Booking Form<br/>Name, Phone, Email]
+    U6[Submit Appointment Request]
+    SY1[System Validates Details]
+    D3{Validation Successful?}
+    SY2[Appointment Confirmed]
+    SY3[Send Confirmation<br/>Email or SMS]
+    U7[Show Booking in User Dashboard]
+    U8[Select Another Property]
+    U9[Show Validation Error]
+    E([End])
+
+    S --> U1 --> U2 --> U3 --> D1
+    D1 -- No --> U8 --> U2
+    D1 -- Yes --> U4 --> D2
+    D2 -- No --> U4
+    D2 -- Yes --> U5 --> U6 --> SY1 --> D3
+    D3 -- No --> U9 --> U5
+    D3 -- Yes --> SY2 --> SY3 --> U7 --> E
+
+    classDef startend fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef action fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+    classDef decision fill:#fef3c7,stroke:#b45309,stroke-width:1.5px,color:#111827;
+
+    class S,E startend;
+    class U1,U2,U3,U4,U5,U6,U7,U8,U9,SY1,SY2,SY3 action;
+    class D1,D2,D3 decision;

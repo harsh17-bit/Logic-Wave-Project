@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban-Stay Timeline</title>
+    <style>
+      :root {
+        --w: 2800px;
+        --h: 740px;
+        --left: 120px;
+        --right: 80px;
+        --top: 55px;
+        --bottom: 90px;
+        --plot-w: calc(var(--w) - var(--left) - var(--right));
+        --plot-h: calc(var(--h) - var(--top) - var(--bottom));
+        --bg: #f2f2f2;
+        --grid: #dedede;
+        --axis: #6f6f6f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+      }
+
+      .chart {
+        width: var(--w);
+        height: var(--h);
+        margin: 0 auto;
+        position: relative;
+        background: var(--bg);
+        border: 2px solid #cfcfcf;
+        overflow: hidden;
+      }
+
+      .plot {
+        position: absolute;
+        left: var(--left);
+        top: var(--top);
+        width: var(--plot-w);
+        height: var(--plot-h);
+      }
+
+      .vline {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--grid);
+      }
+
+      .x-axis {
+        position: absolute;
+        left: var(--left);
+        bottom: var(--bottom);
+        width: var(--plot-w);
+        height: 2px;
+        background: var(--axis);
+      }
+
+      .week-label {
+        position: absolute;
+        bottom: 26px;
+        transform: translateX(-50%);
+        color: #3b3b3b;
+        font-size: 34px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .task {
+        position: absolute;
+        height: 38px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 19px;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .task small {
+        font-weight: 600;
+        opacity: 0.95;
+      }
+
+      .t1 {
+        background: #4f7fa8;
+      }
+      .t2 {
+        background: #e08a23;
+      }
+      .t3 {
+        background: #d85b62;
+      }
+      .t4 {
+        background: #4eaeb1;
+      }
+      .t5 {
+        background: #58a34c;
+      }
+      .t6 {
+        background: #e5bd37;
+        color: #353535;
+      }
+      .t7 {
+        background: #9f6aa8;
+      }
+      .t8 {
+        background: #ec9ea8;
+        color: #3d3d3d;
+      }
+      .t9 {
+        background: #9a7a67;
+      }
+      .t10 {
+        background: #aba6a3;
+      }
+      .t11 {
+        background: #d36f9a;
+      }
+      .t12 {
+        background: #74bb72;
+      }
+
+      .brand {
+        position: absolute;
+        right: 26px;
+        top: 16px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #9b9b9b;
+        letter-spacing: 0.4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chart">
+      <div class="brand">Urban-Stay Dev Timeline</div>
+      <div class="plot" id="plot"></div>
+      <div class="x-axis"></div>
+    </div>
+
+    <script>
+      const plot = document.getElementById('plot');
+      const chart = document.querySelector('.chart');
+      const weeks = 16;
+      const plotWidth = plot.clientWidth;
+      const weekWidth = plotWidth / weeks;
+
+      for (let i = 0; i <= weeks; i++) {
+        const line = document.createElement('div');
+        line.className = 'vline';
+        line.style.left = `${i * weekWidth}px`;
+        plot.appendChild(line);
+      }
+
+      for (let i = 1; i <= weeks; i++) {
+        const label = document.createElement('div');
+        label.className = 'week-label';
+        label.textContent = `Week ${i}`;
+        label.style.left = `${120 + (i - 0.5) * weekWidth}px`;
+        chart.appendChild(label);
+      }
+
+      const tasks = [
+        {
+          text: 'Learning Phase (1 Month)',
+          start: 1.0,
+          width: 4.0,
+          top: 12,
+          cls: 't1',
+        },
+        {
+          text: 'Project Planning',
+          start: 5.0,
+          width: 0.9,
+          top: 58,
+          cls: 't2',
+        },
+        {
+          text: 'UI Design System',
+          start: 5.9,
+          width: 0.85,
+          top: 102,
+          cls: 't3',
+        },
+        {
+          text: 'React Basic Setup',
+          start: 6.75,
+          width: 0.9,
+          top: 146,
+          cls: 't4',
+        },
+        {
+          text: 'React Advanced Pages',
+          start: 7.65,
+          width: 0.95,
+          top: 190,
+          cls: 't5',
+        },
+        {
+          text: 'Property Module',
+          start: 8.6,
+          width: 0.9,
+          top: 234,
+          cls: 't6',
+        },
+        {
+          text: 'Auth + Dashboard',
+          start: 9.5,
+          width: 0.95,
+          top: 278,
+          cls: 't7',
+        },
+        {
+          text: 'Node.js Backend',
+          start: 10.45,
+          width: 1.0,
+          top: 322,
+          cls: 't8',
+        },
+        {
+          text: 'Express.js APIs',
+          start: 11.45,
+          width: 0.95,
+          top: 366,
+          cls: 't9',
+        },
+        {
+          text: 'Database + Models',
+          start: 12.4,
+          width: 1.0,
+          top: 410,
+          cls: 't10',
+        },
+        {
+          text: 'Testing + Bug Fixes',
+          start: 13.4,
+          width: 1.05,
+          top: 454,
+          cls: 't11',
+        },
+        {
+          text: 'Final Touch & Deploy',
+          start: 14.45,
+          width: 0.95,
+          top: 498,
+          cls: 't12',
+        },
+      ];
+
+      tasks.forEach((task) => {
+        const el = document.createElement('div');
+        el.className = `task ${task.cls}`;
+        el.textContent = task.text;
+        el.style.left = `${(task.start - 1) * weekWidth}px`;
+        el.style.top = `${task.top}px`;
+        el.style.width = `${task.width * weekWidth}px`;
+        plot.appendChild(el);
+      });
+    </script>
+  </body>
+</html>

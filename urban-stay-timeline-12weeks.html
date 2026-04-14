@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: white;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 2000px;
+        margin: 0 auto;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        Urban-Stay Development Timeline - 16 Weeks (with 1 Month Learning Phase)
+      </h1>
+      <pre class="mermaid">
+gantt
+  title Development Schedule
+  dateFormat YYYY-MM-DD
+  axisFormat %b %d
+
+  section Weeks
+  Week 1-4: Learning Phase       :a1, 2026-01-01, 28d
+  Week 5: Planning               :a2, 2026-01-29, 7d
+  Week 6: UI Design              :a3, 2026-02-05, 7d
+  Week 7: React Basic            :a4, 2026-02-12, 7d
+  Week 8: React Advanced         :a5, 2026-02-19, 7d
+  Week 9: Property Module        :a6, 2026-02-26, 7d
+  Week 10: Auth Dashboard        :a7, 2026-03-05, 7d
+  Week 11: Node.js Backend       :a8, 2026-03-12, 7d
+  Week 12: Express APIs          :a9, 2026-03-19, 7d
+  Week 13: Database Models       :a10, 2026-03-26, 7d
+  Week 14: Testing Bugs          :a11, 2026-04-02, 7d
+  Week 15: Integration           :a12, 2026-04-09, 7d
+  Week 16: Final Deploy          :a13, 2026-04-16, 7d
+    </pre
+      >
+    </div>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'default' });
+      mermaid.contentLoaded();
+    </script>
+  </body>
+</html>

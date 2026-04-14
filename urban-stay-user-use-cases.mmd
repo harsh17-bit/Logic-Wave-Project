@@ -1,0 +1,17 @@
+﻿flowchart TD
+    U[User]
+
+    U -- Registers / Logs In --> UL[Authentication]
+    U -- Searches --> SF[Search and Filter Properties]
+    U -- Views --> VD[View Property Details]
+    U -- Submits --> SI[Submit Inquiry]
+    U -- Books --> BV[Book Property Visit]
+    U -- Saves --> FV[Save Favorites]
+    U -- Manages --> MP[Manage Profile and Bookings]
+    U -- Gives --> RV[Write Reviews]
+
+    classDef user fill:#eef2ff,stroke:#1d4ed8,stroke-width:2px,color:#111827;
+    classDef module fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+
+    class U user;
+    class UL,SF,VD,SI,BV,FV,MP,RV module;

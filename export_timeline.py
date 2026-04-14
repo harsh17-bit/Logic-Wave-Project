@@ -1,0 +1,26 @@
+import base64
+import urllib.request
+
+content = '''gantt
+    title Urban-Stay Development Timeline
+    dateFormat YYYY-MM-DD
+    
+    section Development
+    Learning Phase (1 Month)           :active, learn, 2026-01-01, 28d
+    Project Planning                   :planning, after learn, 5d
+    UI Design System                   :design, after planning, 4d
+    React Basic Setup                  :react1, after design, 4d
+    React Advanced Pages               :react2, after react1, 4d
+    Property Module                    :property, after react2, 4d
+    Auth + Dashboard                   :auth, after property, 5d
+    Node.js Backend                    :backend, after auth, 5d
+    Express.js APIs                    :express, after backend, 5d
+    Database + Models                  :database, after express, 5d
+    Testing + Bug Fixes                :testing, after database, 5d
+    Integration                        :integration, after testing, 5d
+    Final Touch & Deploy               :deploy, after integration, 4d'''
+
+encoded = base64.b64encode(content.encode()).decode()
+url = f'https://kroki.io/mermaid/png/{encoded}'
+urllib.request.urlretrieve(url, 'd:/Urban-Stay/urban-stay-weekly-timeline.png')
+print('PNG exported to: d:/Urban-Stay/urban-stay-weekly-timeline.png')

@@ -1,0 +1,40 @@
+﻿flowchart LR
+    V[Visitor]
+    R[Registered User]
+    O[Property Owner / Agent]
+    A[Admin]
+    P[Payment Service]
+
+    S([Urban-Stay System])
+
+    UC1[Register and Log In]
+    UC2[Search and Filter Properties]
+    UC3[Book Property Visit]
+    UC4[Submit Inquiry]
+    UC5[Manage Listings]
+    UC6[Approve / Reject Listings]
+    UC7[Process Payments]
+    UC8[View Reports and Analytics]
+
+    V --> S
+    R --> S
+    O --> S
+    A --> S
+    P --> S
+
+    S --> UC1
+    S --> UC2
+    S --> UC3
+    S --> UC4
+    S --> UC5
+    S --> UC6
+    S --> UC7
+    S --> UC8
+
+    classDef actor fill:#f5f7fb,stroke:#1e3a8a,stroke-width:1.5px,color:#111827;
+    classDef system fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#0f172a;
+    classDef usecase fill:#fff7ed,stroke:#c2410c,stroke-width:1.5px,color:#111827;
+
+    class V,R,O,A,P actor;
+    class S system;
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8 usecase;

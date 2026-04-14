@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: white;
+      }
+      svg {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <pre class="mermaid">
+gantt
+  title Urban-Stay Development Timeline
+  dateFormat YYYY-MM-DD
+  axisFormat %w
+
+  section Tasks
+  Learning Phase          :a1, 2026-12-01, 28d
+  Project Planning        :a2, after a1, 5d
+  UI Design System        :a3, after a2, 4d
+  React Basic Setup       :a4, after a3, 4d
+  React Advanced Pages    :a5, after a4, 4d
+  Property Module         :a6, after a5, 4d
+  Auth + Dashboard        :a7, after a6, 5d
+  Node.js Backend         :a8, after a7, 5d
+  Express.js APIs         :a9, after a8, 5d
+  Database + Models       :a10, after a9, 5d
+  Testing + Bug Fixes     :a11, after a10, 5d
+  Integration             :a12, after a11, 5d
+  Final Touch & Deploy    :a13, after a12, 4d
+</pre
+    >
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+      mermaid.contentLoaded();
+    </script>
+  </body>
+</html>
